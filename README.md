@@ -98,7 +98,7 @@ Projeto desenvolvido por **duas adolescentes empreendedoras** apaixonadas por ma
 ## 📞 Contato
 
 - **WhatsApp:** (13) 99208-4636
-- **E-mail:** tcbeauty@gmail.com
+- **E-mail:** 
 
 ---
 
