@@ -1,0 +1,963 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ff168d">
+<title>TC Beauty — Auto Cuidado</title>
+
+<!-- Fontes -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#080708;--panel:#121012;--panel2:#171417;--line:#292229;
+  --pink:#ff168d;--pink2:#ff49ad;--rose:#f3b7c7;--muted:#aaa2a9;
+  --white:#fff;--gold:#ffc21a;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:#fff;font-family:'Poppins',sans-serif;transition:background .3s,color .3s}
+a{color:inherit;text-decoration:none}
+button,input,textarea{font:inherit}
+.container{width:min(1320px,calc(100% - 42px));margin:auto}
+
+/* Modo Claro */
+body.light-mode { --bg: #fdf8f5; --panel: #ffffff; --line: #e8ddd8; color: #3a2e2a; }
+body.light-mode .header { background: #fff; }
+body.light-mode .card, body.light-mode .cat, body.light-mode .routine-card { background: #ffffff; color: #3a2e2a; }
+body.light-mode .card p, body.light-mode .routine-card p { color: #7a6565; }
+body.light-mode .header-nav a { color: #555; }
+
+/* Barra de Frete Grátis */
+.frete-gratis { background: var(--pink); color: #fff; text-align: center; padding: 8px; font-size: 12px; font-weight: 700; letter-spacing: 1px; }
+
+/* top promo */
+.topline{height:34px;background:#090809;border-bottom:1px solid #1d191d;display:flex;align-items:center;justify-content:center;color:#d9d2d8;font-size:12px;letter-spacing:.3px}
+.topline b{color:var(--pink);margin:0 4px}
+
+/* header */
+.header{background:#0d0c0d;border-bottom:1px solid #242024;position:sticky;top:0;z-index:50}
+.header-row{height:76px;display:flex;align-items:center;gap:24px}
+.brand{display:flex;align-items:center;gap:10px;min-width:185px}
+.brand img{width:44px;height:44px;object-fit:cover;border-radius:50%;box-shadow:0 0 20px rgba(255,22,141,.22)}
+.brand-name{font-weight:800;font-size:25px;color:var(--pink);letter-spacing:-1px}
+.brand-name span{color:#fff}
+
+/* MENU ARRUMADO (SEM BARRA FEIA) */
+.header-nav {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  font-size: 13px;
+  color: #c6c0c5;
+  white-space: nowrap;
+  overflow-x: auto;
+  padding-bottom: 5px;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.header-nav::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+.header-nav a:hover {
+  color: var(--pink);
+}
+
+.search{margin-left:auto;display:flex;align-items:center;background:#181619;border:1px solid #29262a;border-radius:28px;height:43px;width:min(330px,28vw);padding:0 9px 0 17px}
+.search input{background:none;border:0;outline:0;color:#eee;width:100%;font-size:13px}
+.search button{border:0;background:var(--pink);color:#fff;width:34px;height:34px;border-radius:50%;cursor:pointer}
+.icons{display:flex;gap:13px;color:#d4cdd2;font-size:19px;align-items:center}
+.icon{position:relative;cursor:pointer}
+.badge{position:absolute;top:-9px;right:-8px;background:var(--pink);color:#fff;border-radius:50%;font-size:9px;min-width:16px;height:16px;display:grid;place-items:center;font-weight:800}
+
+/* Toggle de Tema */
+.theme-toggle{background:transparent;border:1px solid var(--line);color:var(--pink);width:35px;height:35px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:.3s}
+.theme-toggle:hover{background:var(--pink);color:#fff}
+
+/* hero */
+.hero{padding:20px 0 0}
+.hero-frame{height:390px;border:1px solid #281d26;border-radius:18px;overflow:hidden;position:relative;background:#110a0f}
+.hero-frame img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,4,5,.65),rgba(5,4,5,.04) 65%)}
+.hero-copy{position:absolute;left:46px;top:50%;transform:translateY(-50%);max-width:500px}
+.kicker{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#ff77bc;font-weight:800}
+.hero h1{font-size:46px;line-height:1.05;margin:10px 0 10px;letter-spacing:-1.5px}
+.hero p{color:#ddd5db;line-height:1.6;font-size:15px;max-width:440px;margin:0 0 20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:24px;padding:13px 22px;background:var(--pink);color:#fff;font-weight:800;font-size:13px;box-shadow:0 10px 28px rgba(255,22,141,.22);cursor:pointer}
+.btn:hover{background:#ff43aa}
+
+/* section headings */
+.section{padding:48px 0}
+.heading{text-align:center;margin-bottom:26px}
+.heading h2{font-size:28px;margin:0 0 10px}
+.heading h2:after{content:"";display:block;width:50px;height:3px;background:var(--pink);margin:12px auto 0;border-radius:10px}
+.heading p{color:#aaa3aa;font-size:13px;margin:0}
+
+/* category row */
+.categories{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.cat{min-width:120px;height:76px;border:1px solid #282328;background:#121012;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:#d8d0d6;font-size:12px;font-weight:700;transition:.2s;text-align:center;padding:10px;cursor:pointer}
+.cat:hover{border-color:#6c214d;transform:translateY(-2px);color:#fff}
+.cat .emoji{font-size:20px;color:var(--pink)}
+
+/* quick routine */
+.routine{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.routine-card{background:linear-gradient(145deg,#171217,#100e10);border:1px solid #2b2028;border-radius:14px;padding:20px;min-height:155px;position:relative;overflow:hidden}
+.routine-card:after{content:"";position:absolute;width:100px;height:100px;border-radius:50%;right:-30px;bottom:-35px;background:rgba(255,22,141,.08)}
+.step{color:var(--pink);font-weight:900;font-size:12px;letter-spacing:1px;position:relative;z-index:1}
+.routine-card h3{margin:10px 0 7px;font-size:17px;position:relative;z-index:1}
+.routine-card p{margin:0;color:#a9a1a8;font-size:12px;line-height:1.6;position:relative;z-index:1}
+
+/* product-like cards */
+.tabs{display:flex;gap:10px;justify-content:center;margin-bottom:24px;flex-wrap:wrap}
+.tab{background:#151215;border:1px solid #2a2429;color:#c8c0c6;border-radius:22px;padding:10px 16px;font-size:11px;font-weight:800;cursor:pointer}
+.tab.active,.tab:hover{background:#4b1235;border-color:#7b1b55;color:#fff}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.card{background:#141214;border:1px solid #262226;border-radius:13px;overflow:hidden;min-width:0;transition:.2s}
+.card:hover{transform:translateY(-4px);border-color:#6d1d4d;box-shadow:0 16px 35px rgba(0,0,0,.35)}
+.card-img{height:175px;background:linear-gradient(135deg,#2a1d23,#100d0f);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.card-img:before{content:"";position:absolute;width:150px;height:150px;background:radial-gradient(circle,rgba(255,28,143,.26),transparent 65%);}
+.product-visual{position:relative;width:74px;height:112px;border-radius:10px 10px 13px 13px;background:linear-gradient(135deg,#e9a6ad,#fff0e8 45%,#8b3a55);box-shadow:0 10px 25px #0008;display:flex;align-items:center;justify-content:center;color:#35151f;font-size:9px;font-weight:900;text-align:center;padding:4px}
+.product-visual.square{width:112px;height:82px;border-radius:12px}
+.product-visual.bottle{height:125px;width:62px;border-radius:8px 8px 17px 17px}
+.product-visual.bottle:before{content:"";position:absolute;top:-12px;width:25px;height:15px;background:#8b5b4d;border-radius:5px 5px 2px 2px}
+.pill{position:absolute;left:10px;top:10px;background:var(--pink);color:#fff;padding:6px 8px;border-radius:8px;font-size:9px;font-weight:900;z-index:2}
+.card-body{padding:14px}
+.card h3{font-size:14px;margin:0 0 7px;line-height:1.25}
+.card .type{font-size:11px;color:#a59da4;margin-bottom:9px}
+.card p{font-size:11px;color:#8e878d;line-height:1.45;min-height:32px;margin:0}
+.card-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:13px;gap:8px;flex-wrap:wrap}
+.price{color:var(--pink);font-size:13px;font-weight:900}
+.video-links{display:flex;gap:5px;flex-wrap:wrap}
+.video,.video-links a{border:1px solid var(--pink);color:#fff;border-radius:20px;padding:6px 9px;font-size:9px;font-weight:800;background:transparent;text-decoration:none}
+.video:hover,.video-links a:hover{background:var(--pink)}
+
+/* featured banner */
+.feature{margin-top:15px;background:linear-gradient(100deg,#1c0a15,#0d0c0e 65%);border:1px solid #2d1825;border-radius:16px;padding:30px 36px;display:flex;align-items:center;justify-content:space-between;gap:30px}
+.feature h2{font-size:28px;margin:0 0 7px}
+.feature h2 span{color:var(--pink)}
+.feature p{color:#aaa2a9;font-size:13px;margin:0;line-height:1.6}
+.feature-icon{font-size:54px;color:var(--pink)}
+
+/* video library */
+.video-library{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.video-card{background:#141214;border:1px solid #262226;border-radius:14px;padding:20px}
+.video-card .play{width:34px;height:34px;border-radius:50%;background:#4b1235;color:#fff;display:grid;place-items:center;font-size:11px;margin-bottom:12px}
+.video-card h3{font-size:14px;margin:0 0 6px}
+.video-card p{font-size:11px;color:#a59da4;line-height:1.5;margin:0 0 12px}
+.video-card a{font-size:11px;color:var(--pink);font-weight:700}
+
+/* toast + nav bottom */
+.toast{position:fixed;left:50%;bottom:25px;transform:translateX(-50%);background:#171417;border:1px solid #3b2433;border-radius:12px;padding:14px 22px;z-index:80;box-shadow:0 12px 30px #0009;opacity:0;pointer-events:none;transition:.25s}
+.toast.show{opacity:1}
+.toast b{color:var(--pink)}
+
+footer{margin-top:30px;background:#0c0b0c;border-top:1px solid #211d21;padding:38px 0;color:#8f888f;font-size:12px}
+.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:30px}
+.footer-title{font-size:22px;color:var(--pink);font-weight:900;margin-bottom:9px}
+footer h4{color:#eee;margin:0 0 12px;font-size:12px}
+footer a{display:block;margin:7px 0;color:#8f888f}
+footer a:hover{color:#fff}
+.copyright{border-top:1px solid #211d21;margin-top:28px;padding-top:20px;font-size:10px}
+
+/* ===== NOVOS ESTILOS (Quizzes, Ciclo, FAQ, Depoimentos) ===== */
+.faq-item.open .faq-resposta { display: block !important; }
+.faq-item.open h3 span { transform: rotate(180deg); display: inline-block; }
+.cal-dia { padding: 8px 0; text-align: center; font-size: 12px; border-radius: 6px; background: #171417; color: #aaa; }
+.cal-dia.vazio { background: transparent; }
+.cal-dia.menstrual { background: rgba(229,57,53,.25); color: #ff8a80; font-weight:bold; }
+.cal-dia.fertil { background: rgba(255,194,26,.2); color: #ffc21a; font-weight:bold; }
+.cal-dia.ovulacao { background: rgba(255,22,141,.2); color: #ff168d; font-weight:bold; }
+.depoimento-card { background: #141214; border: 1px solid #262226; border-left: 3px solid #ff168d; border-radius: 10px; padding: 15px; margin-bottom: 10px; }
+.depoimento-topo { display: flex; justify-content: space-between; margin-bottom: 5px; }
+.quiz-btn { display:block; width:100%; text-align:left; background:#0a0a0a; border:1px solid #333; color:#fff; padding:12px; margin-bottom:8px; border-radius:8px; cursor:pointer; transition:.2s; }
+.quiz-btn:hover { border-color: var(--pink); color: var(--pink); }
+
+/* Botões Flutuantes */
+.float-buttons { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 15px; z-index: 999; }
+.float-btn { width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: 0.3s; border: none; cursor: pointer; }
+.float-btn:hover { transform: scale(1.1) translateY(-3px); }
+.btn-whats { background: #25d366; }
+.btn-loja { background: var(--pink); }
+.btn-topo { background: #333; display: none; font-size: 20px; }
+.btn-topo.show { display: flex; }
+
+/* responsive */
+@media(max-width:1050px){
+ .header-nav{display:none}
+ .grid{grid-template-columns:repeat(3,1fr)}
+ .routine{grid-template-columns:repeat(2,1fr)}
+ .search{width:330px}
+ .video-library{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:700px){
+ .container{width:min(100% - 24px,1320px)}
+ .header-row{height:68px}
+ .brand-name{font-size:21px}
+ .search{width:180px}
+ .icons{display:none}
+ .hero-frame{height:430px}
+ .hero-copy{left:25px;right:25px}
+ .hero h1{font-size:36px}
+ .grid{grid-template-columns:repeat(2,1fr);gap:10px}
+ .card-img{height:145px}
+ .feature{padding:24px;flex-direction:column;align-items:flex-start}
+ .footer-grid{grid-template-columns:1fr}
+ .video-library{grid-template-columns:1fr}
+}
+@media(max-width:450px){
+ .search{display:none}
+ .brand{min-width:auto}
+ .routine{grid-template-columns:1fr}
+ .grid{grid-template-columns:1fr 1fr}
+ .card-img{height:130px}
+ .hero-frame{height:390px}
+ .hero h1{font-size:32px}
+ .hero p{font-size:13px}
+ .cat{min-width:calc(50% - 8px)}
+}
+</style>
+</head>
+<body>
+
+<div class="frete-gratis">✨ FRETE GRÁTIS ACIMA DE R$ 150 ✨</div>
+<div class="topline">✨ <b>TC Beauty</b> — seu guia de beleza, estilo e autocuidado</div>
+
+<header class="header">
+  <div class="container header-row">
+    <a href="#" class="brand">
+      <img src="logo.jpeg" alt="TC Beauty">
+      <div class="brand-name">TC <span>Beauty</span></div>
+    </a>
+
+    <nav class="header-nav">
+      <a href="#inicio">Início</a>
+      <a href="#rotina">Rotinas</a>
+      <a href="#pele">Pele</a>
+      <a href="#cabelos">Cabelos</a>
+      <a href="#make">Maquiagem</a>
+      <a href="#unhas">Unhas</a>
+      <a href="#corpo">Corpo</a>
+      <a href="#bem-estar">Bem-estar</a>
+      <a href="#quizzes">Quizzes</a>
+      <a href="#ciclo">Ciclo</a>
+      <a href="#fundadoras">Fundadoras</a>
+    </nav>
+
+    <div class="search">
+      <input id="search" placeholder="Pesquisar..." oninput="filterCards()">
+      <button onclick="filterCards()">⌕</button>
+    </div>
+    
+    <div class="icons">
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" title="Mudar tema">🌙</button>
+      <span class="icon">♡</span>
+      <span class="icon">♧<i class="badge">1</i></span>
+      <span class="icon">♙</span>
+    </div>
+  </div>
+</header>
+
+<main id="inicio">
+<section class="hero">
+  <div class="container">
+    <div class="hero-frame">
+      <img src="logo2.jpeg" alt="TC Beauty — beleza, estilo e confiança">
+      <div class="hero-overlay"></div>
+      <div class="hero-copy">
+        <div class="kicker">Guia de autocuidado</div>
+        <h1>Realçando sua beleza<br>com carinho e confiança.</h1>
+        <p>Descubra ideias de rotina, cuidados para pele e cabelos, maquiagem e inspiração para o seu momento de autocuidado.</p>
+        <a class="btn" href="#rotina">Começar agora ✦</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="categorias">
+  <div class="container">
+    <div class="heading">
+      <h2>Categorias</h2>
+      <p>Encontre rapidamente o conteúdo que você quer explorar.</p>
+    </div>
+    <div class="categories">
+      <a class="cat" href="#pele"><span class="emoji">♡</span>Pele</a>
+      <a class="cat" href="#cabelos"><span class="emoji">〰</span>Cabelos</a>
+      <a class="cat" href="#make"><span class="emoji">✧</span>Maquiagem</a>
+      <a class="cat" href="#unhas"><span class="emoji">✦</span>Unhas</a>
+      <a class="cat" href="#corpo"><span class="emoji">◌</span>Corpo & Banho</a>
+      <a class="cat" href="#bem-estar"><span class="emoji">♡</span>Bem-estar</a>
+      <a class="cat" href="#rotina"><span class="emoji">☼</span>Rotinas</a>
+      <a class="cat" href="#videos"><span class="emoji">▶</span>Vídeos</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="rotina">
+  <div class="container">
+    <div class="heading">
+      <h2>Monte seu momento de autocuidado</h2>
+      <p>Uma sequência simples para transformar o cuidado em hábito.</p>
+    </div>
+    <div class="routine">
+      <div class="routine-card"><div class="step">01 · PREPARAR</div><h3>Limpar</h3><p>Comece com uma limpeza suave e deixe a pele pronta para os próximos passos.</p></div>
+      <div class="routine-card"><div class="step">02 · CUIDAR</div><h3>Hidratar</h3><p>Escolha produtos que façam sentido para a sua rotina e para as necessidades da sua pele.</p></div>
+      <div class="routine-card"><div class="step">03 · FINALIZAR</div><h3>Proteger</h3><p>Durante o dia, inclua proteção solar e mantenha seus cuidados de forma constante.</p></div>
+      <div class="routine-card"><div class="step">04 · VOCÊ</div><h3>Relaxar</h3><p>Reserve um tempo para cabelo, maquiagem, banho, skincare ou simplesmente descansar.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="pele">
+  <div class="container">
+    <div class="heading">
+      <h2>Pele</h2>
+      <p>Conteúdos para diferentes rotinas e necessidades de cuidado.</p>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="showGroup('all',this)">Tudo</button>
+      <button class="tab" onclick="showGroup('pele',this)">Pele</button>
+      <button class="tab" onclick="showGroup('skincare',this)">Skincare</button>
+    </div>
+    <div class="grid" id="productGrid">
+      <article class="card" data-tags="pele skincare">
+        <div class="card-img"><span class="pill">ROTINA</span><div class="product-visual bottle">HYDRATE</div></div>
+        <div class="card-body"><h3>Skincare para iniciantes</h3><div class="type">Limpeza · hidratação · proteção</div><p>Aprenda uma rotina simples e organizada para começar.</p><div class="card-bottom"><div class="price">Guia</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=skincare+para+iniciantes+passo+a+passo">Vídeos</a></div></div></div>
+      </article>
+      <article class="card" data-tags="pele">
+        <div class="card-img"><span class="pill">HIDRATAÇÃO</span><div class="product-visual">GLOW<br>CREAM</div></div>
+        <div class="card-body"><h3>Pele seca</h3><div class="type">Conforto · hidratação</div><p>Ideias para uma rotina de cuidados com pele seca.</p><div class="card-bottom"><div class="price">Guia</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=rotina+pele+seca+hidratacao">Vídeos</a></div></div></div>
+      </article>
+      <article class="card" data-tags="pele skincare">
+        <div class="card-img"><span class="pill">PELE</span><div class="product-visual square">GLOW<br>SKIN</div></div>
+        <div class="card-body"><h3>Pele oleosa</h3><div class="type">Limpeza · hidratação</div><p>Conteúdos para organizar uma rotina de pele oleosa.</p><div class="card-bottom"><div class="price">Guia</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=dermatologista+rotina+pele+oleosa">Vídeos</a></div></div></div>
+      </article>
+      <article class="card" data-tags="pele">
+        <div class="card-img"><span class="pill">PROTEÇÃO</span><div class="product-visual bottle">SUN<br>CARE</div></div>
+        <div class="card-body"><h3>Proteção solar</h3><div class="type">Cuidados diurnos</div><p>Entenda o lugar do protetor solar na rotina diária.</p><div class="card-bottom"><div class="price">Guia</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=protetor+solar+dermatologista+como+usar">Vídeos</a></div></div></div>
+      </article>
+      <article class="card" data-tags="pele">
+        <div class="card-img"><span class="pill">PELE NEGRA</span><div class="product-visual">CARE<br>GLOW</div></div>
+        <div class="card-body"><h3>Cuidados para pele negra</h3><div class="type">Hidratação · manchas · proteção</div><p>Conteúdos específicos para conhecer melhor os cuidados.</p><div class="card-bottom"><div class="price">Guia</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=cuidados+pele+negra+skincare">Vídeos</a></div></div></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="cabelos">
+  <div class="container">
+    <div class="heading">
+      <h2>Cabelos</h2>
+      <p>Escolha sua textura e encontre conteúdos de cuidado, finalização e inspiração.</p>
+    </div>
+    <div class="grid">
+      <article class="card"><div class="card-img"><span class="pill">LISOS</span><div class="product-visual">SLEEK<br>HAIR</div></div><div class="card-body"><h3>Cabelos lisos</h3><div class="type">Rotina · lavagem · brilho</div><p>Cuidados e finalizações para fios lisos.</p><div class="card-bottom"><div class="price">Guia</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=rotina+cabelo+liso+hair+care">Vídeos</a></div></div></div></article>
+      <article class="card"><div class="card-img"><span class="pill">ONDULADOS</span><div class="product-visual">WAVY<br>HAIR</div></div><div class="card-body"><h3>Cabelos ondulados</h3><div class="type">Ondas · definição · frizz</div><p>Finalização e cuidados para ondas.</p><div class="card-bottom"><div class="price">Guia</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=finalizacao+cabelo+ondulado+2a+2b+2c">Vídeos</a></div></div></div></article>
+      <article class="card"><div class="card-img"><span class="pill">CACHEADOS</span><div class="product-visual">CURLY<br>LOVE</div></div><div class="card-body"><h3>Cabelos cacheados</h3><div class="type">Fitagem · hidratação</div><p>Rotinas e técnicas de finalização para cachos.</p><div class="card-bottom"><div class="price">Guia</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=finalizacao+cabelo+cacheado+fitagem">Vídeos</a></div></div></div></article>
+      <article class="card"><div class="card-img"><span class="pill">CRESPOS</span><div class="product-visual">CURL<br>POWER</div></div><div class="card-body"><h3>Cabelos crespos</h3><div class="type">Hidratação · nutrição</div><p>Cuidados e penteados para cabelos crespos.</p><div class="card-bottom"><div class="price">Guia</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=cuidados+cabelo+crespo+rotina">Vídeos</a></div></div></div></article>
+      <article class="card"><div class="card-img"><span class="pill">FINALIZAÇÃO</span><div class="product-visual bottle">HAIR<br>MASK</div></div><div class="card-body"><h3>Hidratação capilar</h3><div class="type">Tratamento · cuidado</div><p>Ideias para incluir tratamentos na rotina.</p><div class="card-bottom"><div class="price">Guia</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=hidratacao+cabelo+rotina">Vídeos</a></div></div></div></article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="make">
+  <div class="container">
+    <div class="heading">
+      <h2>Maquiagem</h2>
+      <p>Do básico ao glam, encontre um tutorial para cada momento.</p>
+    </div>
+    <div class="grid">
+      <article class="card"><div class="card-img"><span class="pill">INICIANTE</span><div class="product-visual square">MAKE<br>START</div></div><div class="card-body"><h3>Make completa para iniciantes</h3><div class="type">Passo a passo</div><p>Prepare a pele e aprenda os principais passos.</p><div class="card-bottom"><div class="price">Guia</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=maquiagem+para+iniciantes+passo+a+passo">Vídeos</a></div></div></div></article>
+      <article class="card"><div class="card-img"><span class="pill">DIA A DIA</span><div class="product-visual">SOFT<br>MAKE</div></div><div class="card-body"><h3>Make leve</h3><div class="type">Natural · prática</div><p>Ideias para maquiagem de todos os dias.</p><div class="card-bottom"><div class="price">Guia</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=maquiagem+leve+dia+a+dia+passo+a+passo">Vídeos</a></div></div></div></article>
+      <article class="card"><div class="card-img"><span class="pill">FESTA</span><div class="product-visual">GLOW<br>NIGHT</div></div><div class="card-body"><h3>Make para festa</h3><div class="type">Olhos · pele · boca</div><p>Tutoriais para ocasiões especiais.</p><div class="card-bottom"><div class="price">Guia</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=maquiagem+para+festa+passo+a+passo">Vídeos</a></div></div></div></article>
+      <article class="card"><div class="card-img"><span class="pill">PELE NEGRA</span><div class="product-visual">MELANIN<br>GLOW</div></div><div class="card-body"><h3>Make para pele negra</h3><div class="type">Base · corretivo · tons</div><p>Conteúdos para encontrar combinações e técnicas.</p><div class="card-bottom"><div class="price">Guia</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=maquiagem+pele+negra+base+corretivo+contorno">Vídeos</a></div></div></div></article>
+      <article class="card"><div class="card-img"><span class="pill">DESTAQUE</span><div class="product-visual">BARBIE<br>MAKE</div></div><div class="card-body"><h3>Modern Barbie Makeup</h3><div class="type">Ana Victorino</div><p>O tutorial em destaque no guia.</p><div class="card-bottom"><div class="price">Vídeo</div><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=54W1ptzpbxQ">Assistir</a></div></div></article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="unhas">
+  <div class="container">
+    <div class="heading">
+      <h2>Unhas</h2>
+      <p>Ideias simples para cuidar, organizar e criar unhas bonitas do seu jeito.</p>
+    </div>
+    <div class="grid">
+      <article class="card"><div class="card-img"><span class="pill">BÁSICO</span><div class="product-visual square">NAIL<br>CARE</div></div><div class="card-body"><h3>Cuidados básicos</h3><div class="type">Higiene · hidratação</div><p>Rotina simples para mãos e unhas.</p><div class="card-bottom"><div class="price">Guia</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=cuidados+com+as+unhas+em+casa">Vídeos</a></div></div></div></article>
+      <article class="card"><div class="card-img"><span class="pill">MANICURE</span><div class="product-visual">SOFT<br>NAILS</div></div><div class="card-body"><h3>Manicure em casa</h3><div class="type">Passo a passo</div><p>Ideias para aprender técnicas básicas.</p><div class="card-bottom"><div class="price">Guia</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=manicure+em+casa+passo+a+passo">Vídeos</a></div></div></div></article>
+      <article class="card"><div class="card-img"><span class="pill">NAIL ART</span><div class="product-visual square">NAIL<br>ART</div></div><div class="card-body"><h3>Nail art fácil</h3><div class="type">Criatividade · desenhos</div><p>Inspirações fáceis para testar.</p><div class="card-bottom"><div class="price">Ideias</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=nail+art+f%C3%A1cil+unhas">Vídeos</a></div></div></div></article>
+      <article class="card"><div class="card-img"><span class="pill">INSPIRAÇÃO</span><div class="product-visual">NAIL<br>INSPO</div></div><div class="card-body"><h3>Inspirações de unhas</h3><div class="type">Cores · formatos</div><p>Pesquise estilos e ideias para sua próxima manicure.</p><div class="card-bottom"><div class="price">Ideias</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=inspira%C3%A7%C3%A3o+unhas+2026">Vídeos</a></div></div></div></article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="corpo">
+  <div class="container">
+    <div class="heading">
+      <h2>Corpo & Banho</h2>
+      <p>Mais ideias de autocuidado para transformar o banho e os momentos de pausa.</p>
+    </div>
+    <div class="grid">
+      <article class="card"><div class="card-img"><span class="pill">BANHO</span><div class="product-visual bottle">BODY<br>CARE</div></div><div class="card-body"><h3>Rotina de banho</h3><div class="type">Limpeza · hidratação</div><p>Organize um momento de cuidado corporal simples.</p><div class="card-bottom"><div class="price">Rotina</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=rotina+de+banho+self+care">Vídeos</a></div></div></div></article>
+      <article class="card"><div class="card-img"><span class="pill">BODY CARE</span><div class="product-visual">BODY<br>GLOW</div></div><div class="card-body"><h3>Cuidados com o corpo</h3><div class="type">Hidratação · rotina</div><p>Ideias para criar hábitos de cuidado corporal.</p><div class="card-bottom"><div class="price">Guia</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=body+care+routine+portugu%C3%AAs">Vídeos</a></div></div></div></article>
+      <article class="card"><div class="card-img"><span class="pill">RELAX</span><div class="product-visual square">SPA<br>DAY</div></div><div class="card-body"><h3>Dia de spa em casa</h3><div class="type">Relaxamento · autocuidado</div><p>Monte um momento tranquilo com cuidados simples.</p><div class="card-bottom"><div class="price">Ideias</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=spa+day+em+casa+self+care">Vídeos</a></div></div></div></article>
+      <article class="card"><div class="card-img"><span class="pill">PERFUME</span><div class="product-visual">BODY<br>MIST</div></div><div class="card-body"><h3>Perfumes e body splash</h3><div class="type">Fragrâncias · inspiração</div><p>Explore conteúdos sobre fragrâncias e formas de usar.</p><div class="card-bottom"><div class="price">Inspiração</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=body+splash+perfume+rotina">Vídeos</a></div></div></div></article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="bem-estar">
+  <div class="container">
+    <div class="heading">
+      <h2>Bem-estar</h2>
+      <p>Autocuidado também pode ser descanso, organização e pequenos momentos para você.</p>
+    </div>
+    <div class="grid">
+      <article class="card"><div class="card-img"><span class="pill">RELAXAR</span><div class="product-visual square">ME<br>TIME</div></div><div class="card-body"><h3>Momento só seu</h3><div class="type">Pausa · relaxamento</div><p>Ideias de atividades tranquilas para desacelerar.</p><div class="card-bottom"><div class="price">Ideias</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=self+care+day+portugu%C3%AAs">Vídeos</a></div></div></div></article>
+      <article class="card"><div class="card-img"><span class="pill">ORGANIZAÇÃO</span><div class="product-visual">RESET<br>DAY</div></div><div class="card-body"><h3>Reset day</h3><div class="type">Organização · rotina</div><p>Inspirações para organizar seu espaço e sua rotina.</p><div class="card-bottom"><div class="price">Rotina</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=reset+day+organiza%C3%A7%C3%A3o">Vídeos</a></div></div></div></article>
+      <article class="card"><div class="card-img"><span class="pill">MÚSICA</span><div class="product-visual">CALM<br>TIME</div></div><div class="card-body"><h3>Playlist para relaxar</h3><div class="type">Música · ambiente</div><p>Encontre playlists para acompanhar seu momento de autocuidado.</p><div class="card-bottom"><div class="price">Vídeos</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=playlist+relaxante+self+care">Ouvir</a></div></div></div></article>
+      <article class="card"><div class="card-img"><span class="pill">INSPIRAÇÃO</span><div class="product-visual square">COZY<br>TIME</div></div><div class="card-body"><h3>Rotina aconchegante</h3><div class="type">Casa · pausa</div><p>Ideias para deixar seu momento de descanso mais gostoso.</p><div class="card-bottom"><div class="price">Ideias</div><div class="video-links"><a class="video" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=cozy+routine+autocuidado">Vídeos</a></div></div></div></article>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZZES -->
+<section class="section" id="quizzes">
+  <div class="container">
+    <div class="heading">
+      <h2>Quizzes de Autocuidado</h2>
+      <p>Descubra o seu tipo e receba dicas feitas para você.</p>
+    </div>
+    <div class="categories" style="margin-bottom: 20px;">
+      <div class="cat" onclick="irParaQuiz('pele')"><span class="emoji">♡</span>Quiz de Pele</div>
+      <div class="cat" onclick="irParaQuiz('cabelo')"><span class="emoji">〰</span>Quiz de Cabelo</div>
+      <div class="cat" onclick="irParaQuiz('skincare')"><span class="emoji">☼</span>Rotina de Skincare</div>
+      <div class="cat" onclick="irParaQuiz('alimentacao')"><span class="emoji">✧</span>Alimentação</div>
+      <div class="cat" onclick="irParaQuiz('maquiagem')"><span class="emoji">✦</span>Estilo de Make</div>
+    </div>
+    
+    <div id="quizContainer" style="display:none; background:#141214; border:1px solid #262226; border-radius:13px; padding:24px; max-width:600px; margin: 0 auto;">
+      <h3 id="quizTitle" style="text-align:center; margin-bottom: 20px; color:#ff168d;"></h3>
+      <div id="quizContent"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CICLO -->
+<section class="section" id="ciclo">
+  <div class="container">
+    <div class="heading">
+      <h2>Ciclo Menstrual</h2>
+      <p>Conheça as 4 fases do seu ciclo e acompanhe seu calendário.</p>
+    </div>
+    <div class="routine" style="margin-bottom: 20px;">
+      <div class="routine-card"><div class="step" style="color:#e53935">MENSTRUAL</div><h3>Dia 1 ao 5</h3><p>O corpo elimina o endométrio. Sintomas: cólicas e cansaço.</p></div>
+      <div class="routine-card"><div class="step" style="color:#26a69a">FOLICULAR</div><h3>Dia 1 ao 13</h3><p>Fase de energia e renovação. Pele luminosa e mais disposição.</p></div>
+      <div class="routine-card"><div class="step" style="color:#ffc21a">OVULATÓRIA</div><h3>Dia 14</h3><p>Período fértil. Muco transparente e libido elevada.</p></div>
+      <div class="routine-card"><div class="step" style="color:#ff168d">LÚTEA</div><h3>Dia 15 ao 28</h3><p>TPM, irritabilidade e vontade de doces. Cuide-se mais.</p></div>
+    </div>
+    
+    <div class="calendar-wrap" style="background:#141214; border:1px solid #262226; border-radius:13px; padding:24px;">
+      <h3 style="margin-bottom: 15px;">📅 Calendário do seu ciclo</h3>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;">
+        <div>
+          <label style="font-size:11px; color:#aaa;">Primeiro dia da menstruação</label><br>
+          <input type="date" id="calData" onchange="calcCalendario()" style="padding:8px; border-radius:6px; border:1px solid #333; background:#0a0a0a; color:#fff;">
+        </div>
+        <div>
+          <label style="font-size:11px; color:#aaa;">Duração do ciclo (dias)</label><br>
+          <input type="number" id="calDuracao" value="28" oninput="calcCalendario()" style="padding:8px; border-radius:6px; border:1px solid #333; background:#0a0a0a; color:#fff; width:100px;">
+        </div>
+      </div>
+      <div id="calResultado" style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;"></div>
+      <div id="calGrade" style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCAÇÃO -->
+<section class="section" id="educacao">
+  <div class="container">
+    <div class="heading">
+      <h2>Educação e Saúde</h2>
+      <p>Informação de qualidade sobre saúde e bem-estar.</p>
+    </div>
+    <div class="routine">
+      <div class="routine-card"><div class="step">PERÍODO FÉRTIL</div><h3>O que é?</h3><p>É a janela do ciclo em que a gravidez é possível, geralmente entre os dias 9 e 15 em um ciclo de 28 dias. O muco transparente é um sinal.</p></div>
+      <div class="routine-card"><div class="step">SEXUALIDADE</div><h3>Educação Sexual</h3><p>O preservativo é o único método que protege contra ISTs e gravidez. Consentimento é fundamental. Faça exames regularmente.</p></div>
+      <div class="routine-card"><div class="step">SAÚDE ÍNTIMA</div><h3>Higiene e Cuidados</h3><p>Lave apenas com água ou sabonete neutro. Evite duchas internas. Prefira roupas de algodão e troque o absorvente a cada 4h.</p></div>
+      <div class="routine-card"><div class="step">BEM-ESTAR</div><h3>Saúde Mental</h3><p>Durma de 7 a 9 horas por noite. Pratique exercícios. Beba água. Busque ajuda profissional se precisar.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FUNDADORAS -->
+<section class="section" id="fundadoras">
+  <div class="container">
+    <div class="heading">
+      <h2>Nossas Fundadoras</h2>
+      <p>Conheça a história de quem criou a TC Beauty</p>
+    </div>
+    <div style="display:flex; gap:30px; background:#141214; border:1px solid #262226; border-radius:14px; padding:30px; align-items:center; flex-wrap:wrap;">
+      <div style="flex:1; min-width:280px;">
+        <img src="fundadoras.jpg.jpeg" alt="Luiza e Allana - Fundadoras" style="width:100%; border-radius:12px; border:2px solid #ffc21a; box-shadow: 0 8px 24px rgba(255,22,141,0.15);">
+      </div>
+      <div style="flex:1.5; min-width:280px; color:#aaa2a9; font-size:14px; line-height:1.8;">
+        <p style="color:#ff168d; font-weight:bold; font-size:16px; margin-bottom:10px;">"Oi linda, tudo bem?</p>
+        <p style="margin-bottom:10px;">Somos meninas sonhadoras que estão tentando mudar a vida através do desenvolvimento. Criamos a TC Beauty com muito carinho, um espaço onde a beleza e o autocuidado se encontram de verdade. Além do site também estamos construindo, aos poucos, uma loja de maquiagem.</p>
+        <p style="margin-bottom:10px;">Tudo isso é uma parte da história. É só uma parte da história que eu quero escrever: ajudar mulheres a se sentirem bem, confiantes e cuidadosas. Quero ajudar cada mulher a se iluminar com os olhos que merece, cheia de valor, força e beleza. Cada dica, cada quiz, cada conteúdo aqui foi pensado para vocês.</p>
+        <p style="color:#ffc21a; font-family:'Playfair Display', serif; font-size:16px; margin-top:15px;">Sejam bem-vindas a esse cantinho que fizemos com coração, com amor,<br><strong>Luiza e Allana.</strong>"</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="container">
+    <div class="heading">
+      <h2>Perguntas Frequentes</h2>
+      <p>Dúvidas comuns sobre beleza e autocuidado</p>
+    </div>
+    <div style="max-width:700px; margin:0 auto;">
+      <div class="faq-item" onclick="this.classList.toggle('open')" style="background:#141214; border:1px solid #262226; border-radius:10px; margin-bottom:10px; cursor:pointer; padding:15px;">
+        <h3 style="font-size:15px; display:flex; justify-content:space-between;">Como descubro meu tipo de pele? <span>▼</span></h3>
+        <p style="color:#aaa; font-size:13px; margin-top:10px; display:none;" class="faq-resposta">Faça o quiz de pele na seção Quizzes. Ele analisa suas respostas e indica o tipo com dicas personalizadas.</p>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')" style="background:#141214; border:1px solid #262226; border-radius:10px; margin-bottom:10px; cursor:pointer; padding:15px;">
+        <h3 style="font-size:15px; display:flex; justify-content:space-between;">Com que frequência devo lavar o cabelo? <span>▼</span></h3>
+        <p style="color:#aaa; font-size:13px; margin-top:10px; display:none;" class="faq-resposta">Depende do tipo: cabelos lisos geralmente precisam de lavagem diária; cacheados e crespos podem ser lavados 1-2 vezes por semana.</p>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')" style="background:#141214; border:1px solid #262226; border-radius:10px; margin-bottom:10px; cursor:pointer; padding:15px;">
+        <h3 style="font-size:15px; display:flex; justify-content:space-between;">O protetor solar é realmente necessário? <span>▼</span></h3>
+        <p style="color:#aaa; font-size:13px; margin-top:10px; display:none;" class="faq-resposta">Sim, todos os dias — mesmo em dias nublados. O protetor previne manchas, envelhecimento precoce e câncer de pele.</p>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')" style="background:#141214; border:1px solid #262226; border-radius:10px; margin-bottom:10px; cursor:pointer; padding:15px;">
+        <h3 style="font-size:15px; display:flex; justify-content:space-between;">Como deixar um depoimento? <span>▼</span></h3>
+        <p style="color:#aaa; font-size:13px; margin-top:10px; display:none;" class="faq-resposta">Vá até a seção Depoimentos, preencha nome, avaliação e texto. Seu depoimento ficará salvo e visível.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="section" id="depoimentos">
+  <div class="container">
+    <div class="heading">
+      <h2>Depoimentos</h2>
+      <p>Deixe seu depoimento real sobre a TC Beauty</p>
+    </div>
+    
+    <div style="background:#141214; border:1px solid #262226; border-radius:12px; padding:20px; margin-bottom:30px; max-width:600px; margin-left:auto; margin-right:auto;">
+      <h3 style="margin-bottom:15px; color:#ff168d;">Deixe seu depoimento</h3>
+      <input type="text" id="depNome" placeholder="Seu nome" style="width:100%; padding:10px; margin-bottom:10px; background:#0a0a0a; border:1px solid #333; border-radius:8px; color:#fff;">
+      <div style="margin-bottom:10px;">
+        <span style="font-size:12px; color:#aaa; display:block; margin-bottom:5px;">Avaliação:</span>
+        <div id="depEstrelas" style="font-size:24px; color:#333; cursor:pointer;">
+          <span onclick="setStars(1)">★</span><span onclick="setStars(2)">★</span><span onclick="setStars(3)">★</span><span onclick="setStars(4)">★</span><span onclick="setStars(5)">★</span>
+        </div>
+      </div>
+      <textarea id="depTexto" placeholder="Conte como foi sua experiência..." style="width:100%; padding:10px; margin-bottom:10px; background:#0a0a0a; border:1px solid #333; border-radius:8px; color:#fff; min-height:80px;"></textarea>
+      <button onclick="enviarDepoimento()" style="background:#ff168d; color:#fff; border:none; padding:10px 20px; border-radius:20px; font-weight:bold; cursor:pointer;">Enviar Depoimento</button>
+    </div>
+
+    <div id="listaDepoimentos" style="max-width:700px; margin:0 auto;"></div>
+  </div>
+</section>
+
+<section class="section" id="videos">
+  <div class="container">
+    <div class="heading">
+      <h2>Biblioteca de vídeos</h2>
+      <p>Mais links para pesquisar tutoriais e inspirações dentro de cada categoria.</p>
+    </div>
+    <div class="video-library">
+      <div class="video-card"><div class="play">▶</div><h3>Cabelos</h3><p>Finalização, hidratação, penteados, cuidados e diferentes texturas.</p><a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=hair+care+portugu%C3%AAs">Ver vídeos</a></div>
+      <div class="video-card"><div class="play">▶</div><h3>Skincare</h3><p>Rotinas de limpeza, hidratação, proteção e cuidados com a pele.</p><a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=skincare+portugu%C3%AAs+dermatologista">Ver vídeos</a></div>
+      <div class="video-card"><div class="play">▶</div><h3>Maquiagem</h3><p>Tutoriais para iniciantes, maquiagem leve, festa e diferentes técnicas.</p><a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=maquiagem+tutorial+portugu%C3%AAs">Ver vídeos</a></div>
+      <div class="video-card"><div class="play">▶</div><h3>Unhas</h3><p>Manicure, nail art, cuidados básicos e inspirações.</p><a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=unhas+nail+art+portugu%C3%AAs">Ver vídeos</a></div>
+      <div class="video-card"><div class="play">▶</div><h3>Corpo & Banho</h3><p>Body care, banho relaxante, hidratação e spa em casa.</p><a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=body+care+banho+autocuidado">Ver vídeos</a></div>
+      <div class="video-card"><div class="play">▶</div><h3>Bem-estar</h3><p>Rotinas de autocuidado, organização, descanso e relaxamento.</p><a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=autocuidado+bem+estar+rotina">Ver vídeos</a></div>
+      <div class="video-card"><div class="play">▶</div><h3>Rotinas completas</h3><p>Vídeos que combinam vários cuidados em um único momento.</p><a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=full+self+care+routine">Ver vídeos</a></div>
+      <div class="video-card"><div class="play">▶</div><h3>Inspirações</h3><p>Ideias novas para montar sua própria rotina de autocuidado.</p><a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=ideias+autocuidado+self+care">Explorar</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="skincare">
+  <div class="container">
+    <div class="feature">
+      <div>
+        <h2>Seu autocuidado merece um <span>momento só seu.</span></h2>
+        <p>Salve suas rotinas favoritas, explore vídeos e volte quando quiser para continuar cuidando de você.</p>
+      </div>
+      <div class="feature-icon">♡</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-title">TC Beauty</div>
+        <div>Beleza · Estilo · Confiança</div>
+        <p style="max-width:430px;line-height:1.7">Guia de autocuidado com conteúdos para pele, cabelos, maquiagem e skincare.</p>
+      </div>
+      <div>
+        <h4>Explorar</h4>
+        <a href="#pele">Pele</a>
+        <a href="#cabelos">Cabelos</a>
+        <a href="#make">Maquiagem</a>
+        <a href="#unhas">Unhas</a>
+        <a href="#corpo">Corpo & Banho</a>
+        <a href="#bem-estar">Bem-estar</a>
+        <a href="#videos">Vídeos</a>
+      </div>
+      <div>
+        <h4>Cabelos</h4>
+        <a href="#cabelos">Lisos</a>
+        <a href="#cabelos">Ondulados</a>
+        <a href="#cabelos">Cacheados</a>
+        <a href="#cabelos">Crespos</a>
+        <a href="#cabelos">Hidratação</a>
+        <a href="#cabelos">Finalização</a>
+      </div>
+    </div>
+    <div class="copyright">© TC Beauty · Guia de Auto Cuidado · Conteúdo para inspiração.</div>
+  </div>
+</footer>
+
+<!-- BOTÕES FLUTUANTES -->
+<div class="float-buttons">
+  <button class="float-btn btn-topo" id="btnTopo" onclick="window.scrollTo({top:0, behavior:'smooth'})" title="Voltar ao topo">↑</button>
+  
+  <!-- ⚠️ TROQUE O LINK ABAIXO PELO LINK REAL DA SUA LOJA DE MAQUIAGEM -->
+  <a href="https://www.seusite.com.br" target="_blank" rel="noopener" class="float-btn btn-loja" title="Ir para a Loja de Maquiagem">🛍️</a>
+  
+  <!-- ⚠️ TROQUE O NÚMERO ABAIXO PELO SEU WHATSAPP REAL -->
+  <a href="https://wa.me/5511999999999?text=Oi!%20Vim%20pelo%20site%20da%20TC%20Beauty%20e%20gostaria%20de%20atendimento." target="_blank" rel="noopener" class="float-btn btn-whats" title="Fale com a gente no WhatsApp">💬</a>
+</div>
+
+<div class="toast" id="toast"><b>✨ Sucesso!</b> Ação realizada com sucesso.</div>
+
+<script>
+// ===== LÓGICA DOS CARDS E BUSCA (Original) =====
+function showGroup(group,el){
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('#productGrid .card').forEach(card=>{
+    card.style.display=(group==='all'||card.dataset.tags.includes(group))?'block':'none';
+  });
+}
+function filterCards(){
+  const q=document.getElementById('search').value.toLowerCase().trim();
+  document.querySelectorAll('.card').forEach(card=>{
+    card.style.display=(!q||card.innerText.toLowerCase().includes(q))?'block':'none';
+  });
+}
+document.querySelectorAll('.icon').forEach(icon=>icon.addEventListener('click',()=>{
+  const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800);
+}));
+
+// ===== MODO CLARO / ESCURO =====
+function toggleTheme() {
+  document.body.classList.toggle('light-mode');
+  const isLight = document.body.classList.contains('light-mode');
+  document.getElementById('themeBtn').innerText = isLight ? '☀️' : '🌙';
+  localStorage.setItem('tc_tema', isLight ? 'light' : 'dark');
+}
+if (localStorage.getItem('tc_tema') === 'light') {
+  document.body.classList.add('light-mode');
+  document.getElementById('themeBtn').innerText = '☀️';
+}
+
+// ===== BOTÃO VOLTAR AO TOPO =====
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('btnTopo');
+  if (window.scrollY > 300) {
+    btn.classList.add('show');
+  } else {
+    btn.classList.remove('show');
+  }
+});
+
+// ===== LÓGICA DOS QUIZZES =====
+const QUIZZES = {
+  pele: {
+    titulo: "Qual é o seu tipo de pele?",
+    perguntas: [
+      { q: "Como sua pele fica ao acordar?", o: [{ t: "Brilhante toda", tipo: "oleosa" }, { t: "Brilhante só na zona T", tipo: "mista" }, { t: "Normal", tipo: "normal" }, { t: "Seca, descamando", tipo: "seca" }, { t: "Vermelha/irritada", tipo: "sensivel" }] },
+      { q: "Após lavar, sente repuxamento?", o: [{ t: "Sempre", tipo: "seca" }, { t: "Às vezes", tipo: "normal" }, { t: "Nunca, fica oleosa", tipo: "oleosa" }, { t: "Sim, fica vermelha", tipo: "sensivel" }, { t: "Não sinto nada", tipo: "mista" }] },
+      { q: "Como são seus poros?", o: [{ t: "Grandes", tipo: "oleosa" }, { t: "Visíveis na zona T", tipo: "mista" }, { t: "Pequenos", tipo: "seca" }, { t: "Normais", tipo: "normal" }, { t: "Finos com irritação", tipo: "sensivel" }] },
+      { q: "Frequência de cravos/espinhas?", o: [{ t: "Sempre", tipo: "oleosa" }, { t: "Só zona T", tipo: "mista" }, { t: "Raramente", tipo: "normal" }, { t: "Quase nunca", tipo: "seca" }, { t: "Com irritação", tipo: "sensivel" }] },
+      { q: "Reação a produtos novos?", o: [{ t: "Bem", tipo: "normal" }, { t: "Fica oleosa", tipo: "oleosa" }, { t: "Fica seca", tipo: "seca" }, { t: "Só zona T oleosa", tipo: "mista" }, { t: "Fica irritada", tipo: "sensivel" }] },
+      { q: "Sua pele descama?", o: [{ t: "Frequência", tipo: "seca" }, { t: "Só inverno", tipo: "seca" }, { t: "Nunca", tipo: "oleosa" }, { t: "Bochechas", tipo: "mista" }, { t: "Com coceira", tipo: "sensivel" }] },
+      { q: "Textura da pele?", o: [{ t: "Lisa", tipo: "normal" }, { t: "Áspera", tipo: "seca" }, { t: "Brilhante", tipo: "oleosa" }, { t: "Mista", tipo: "mista" }, { t: "Reativa", tipo: "sensivel" }] },
+      { q: "Fica vermelha fácil?", o: [{ t: "Sempre", tipo: "sensivel" }, { t: "Produtos novos", tipo: "sensivel" }, { t: "Raramente", tipo: "normal" }, { t: "Nunca", tipo: "oleosa" }, { t: "Áreas específicas", tipo: "mista" }] },
+      { q: "Sua zona T?", o: [{ t: "Muito oleosa", tipo: "oleosa" }, { t: "Oleosa", tipo: "mista" }, { t: "Normal", tipo: "normal" }, { t: "Seca", tipo: "seca" }, { t: "Irritada", tipo: "sensivel" }] },
+      { q: "Suas bochechas?", o: [{ t: "Oleosas", tipo: "oleosa" }, { t: "Normais", tipo: "normal" }, { t: "Secas", tipo: "seca" }, { t: "Irritadas", tipo: "sensivel" }, { t: "Zona T oleosa", tipo: "mista" }] }
+    ],
+    res: {
+      normal: { nome: "Pele Normal", desc: "Equilibrada, sem excesso de oleosidade nem ressecamento.", dicas: ["Rotina simples: limpeza, hidratante e protetor.", "Evite produtos agressivos.", "Hidrate diariamente.", "Use protetor solar sempre."] },
+      seca: { nome: "Pele Seca", desc: "Produz menos sebo, causando repuxamento e descamação.", dicas: ["Sabonete suave.", "Hidratante com ceramidas.", "Aplique com pele úmida.", "Evite água quente."] },
+      oleosa: { nome: "Pele Oleosa", desc: "Produz sebo em excesso, com brilho e poros dilatados.", dicas: ["Lave 2x ao dia com gel oil-free.", "Hidratante em gel.", "Niacinamida.", "Protetor oil-free."] },
+      mista: { nome: "Pele Mista", desc: "Oleosa na zona T e normal/seca nas bochechas.", dicas: ["Produtos diferentes por área.", "Limpeza regular.", "Niacinamida.", "Não lave mais de 2x."] },
+      sensivel: { nome: "Pele Sensível", desc: "Reage facilmente a produtos, ficando vermelha.", dicas: ["Produtos hipoalergênicos.", "Teste no braço.", "Protetor mineral.", "Evite esfoliantes físicos."] }
+    }
+  },
+  cabelo: {
+    titulo: "Qual é o seu tipo de cabelo?",
+    perguntas: [
+      { q: "Como fica ao secar naturalmente?", o: [{ t: "Liso", tipo: "liso" }, { t: "Ondas", tipo: "ondulado" }, { t: "Cachos", tipo: "cacheado" }, { t: "Cachos apertados", tipo: "crespo" }] },
+      { q: "Tem muito volume?", o: [{ t: "Não", tipo: "liso" }, { t: "Moderado", tipo: "ondulado" }, { t: "Médio", tipo: "cacheado" }, { t: "Enorme", tipo: "crespo" }] },
+      { q: "Reação à umidade?", o: [{ t: "Opaco", tipo: "liso" }, { t: "Mais ondulado", tipo: "ondulado" }, { t: "Cachos definidos", tipo: "cacheado" }, { t: "Cachos embolam", tipo: "crespo" }] },
+      { q: "Consegue pentear seco?", o: [{ t: "Sempre", tipo: "liso" }, { t: "Às vezes", tipo: "ondulado" }, { t: "Só com creme", tipo: "cacheado" }, { t: "Só molhado", tipo: "crespo" }] },
+      { q: "Frequência de lavagem?", o: [{ t: "Todo dia", tipo: "liso" }, { t: "Dia sim/dia não", tipo: "ondulado" }, { t: "1-2x semana", tipo: "cacheado" }, { t: "1x semana", tipo: "crespo" }] },
+      { q: "Quebra fácil?", o: [{ t: "Não", tipo: "liso" }, { t: "Às vezes", tipo: "ondulado" }, { t: "Nas pontas", tipo: "cacheado" }, { t: "Muito", tipo: "crespo" }] },
+      { q: "Brilho natural?", o: [{ t: "Muito", tipo: "liso" }, { t: "Moderado", tipo: "ondulado" }, { t: "Só hidratado", tipo: "cacheado" }, { t: "Quase nunca", tipo: "crespo" }] },
+      { q: "Sua raiz?", o: [{ t: "Oleosa", tipo: "liso" }, { t: "Normal", tipo: "ondulado" }, { t: "Mista", tipo: "cacheado" }, { t: "Seca", tipo: "crespo" }] },
+      { q: "Suas pontas?", o: [{ t: "Lisas", tipo: "liso" }, { t: "Curvadas", tipo: "ondulado" }, { t: "Cachos", tipo: "cacheado" }, { t: "Apertados", tipo: "crespo" }] },
+      { q: "Ao acordar?", o: [{ t: "Liso", tipo: "liso" }, { t: "Ondas", tipo: "ondulado" }, { t: "Cachos amassados", tipo: "cacheado" }, { t: "Embolado", tipo: "crespo" }] }
+    ],
+    res: {
+      liso: { nome: "Cabelo Liso", desc: "Sem curvatura natural, oleoso rápido e com brilho.", dicas: ["Lave com frequência.", "Shampoo seco.", "Leave-in leve.", "Condicionador só nas pontas."] },
+      ondulado: { nome: "Cabelo Ondulado", desc: "Ondas em S, com frizz no topo e ressecamento.", dicas: ["Creme de pentear.", "Difusor.", "Não escove seco.", "Hidratação semanal."] },
+      cacheado: { nome: "Cabelo Cacheado", desc: "Cachos em espiral, volume e ressecamento.", dicas: ["Não lave todo dia.", "Creme + gel.", "Touca de cetim.", "Hidratação profunda."] },
+      crespo: { nome: "Cabelo Crespo", desc: "Cachos em Z, textura densa e frágil.", dicas: ["Hidratação profunda.", "Umectação.", "Desembarace molhado.", "Penteados protetores."] }
+    }
+  },
+  skincare: {
+    titulo: "Qual é o seu nível de rotina?",
+    perguntas: [
+      { q: "Lava o rosto?", o: [{ t: "2x ao dia", tipo: "avancada" }, { t: "1x", tipo: "intermediaria" }, { t: "Às vezes", tipo: "iniciante" }, { t: "Quase nunca", tipo: "iniciante" }] },
+      { q: "Usa protetor solar?", o: [{ t: "Todos os dias", tipo: "avancada" }, { t: "Maioria", tipo: "intermediaria" }, { t: "Só verão", tipo: "iniciante" }, { t: "Nunca", tipo: "iniciante" }] },
+      { q: "Quantos produtos?", o: [{ t: "1-2", tipo: "iniciante" }, { t: "3-4", tipo: "intermediaria" }, { t: "5-6", tipo: "intermediaria" }, { t: "7+", tipo: "avancada" }] },
+      { q: "Conhece seu tipo?", o: [{ t: "Sim", tipo: "avancada" }, { t: "Acho que sim", tipo: "intermediaria" }, { t: "Não sei", tipo: "iniciante" }, { t: "Nunca pensei", tipo: "iniciante" }] },
+      { q: "Hidratação facial?", o: [{ t: "2x ao dia", tipo: "avancada" }, { t: "1x", tipo: "intermediaria" }, { t: "Algumas vezes", tipo: "iniciante" }, { t: "Raramente", tipo: "iniciante" }] },
+      { q: "Rotina noturna?", o: [{ t: "Completa", tipo: "avancada" }, { t: "Simples", tipo: "intermediaria" }, { t: "Às vezes", tipo: "iniciante" }, { t: "Não", tipo: "iniciante" }] },
+      { q: "Quantos ativos?", o: [{ t: "Nenhum", tipo: "iniciante" }, { t: "1", tipo: "iniciante" }, { t: "2-3", tipo: "intermediaria" }, { t: "4+", tipo: "avancada" }] },
+      { q: "Pele reage mal?", o: [{ t: "Nunca", tipo: "avancada" }, { t: "Uma vez", tipo: "intermediaria" }, { t: "Algumas vezes", tipo: "intermediaria" }, { t: "Frequente", tipo: "iniciante" }] }
+    ],
+    res: {
+      iniciante: { nome: "Rotina Iniciante", desc: "Começando no skincare. O ideal é montar uma rotina básica e consistente.", dicas: ["Limpeza, hidratação e protetor.", "Não pule o protetor.", "30 dias antes de mudar.", "Um produto novo por vez."] },
+      intermediaria: { nome: "Rotina Intermediária", desc: "Já tem rotina consistente. Hora de ativos específicos.", dicas: ["Niacinamida ou ácido hialurônico.", "Esfoliação 1-2x semana.", "Máscaras faciais.", "Considere dermatologista."] },
+      avancada: { nome: "Rotina Avançada", desc: "Conhecimento e rotina completa. Foque em consistência.", dicas: ["Continue consistente.", "Alterne ativos.", "Exames anuais.", "Evite exagerar."] }
+    }
+  },
+  alimentacao: {
+    titulo: "Qual é o seu perfil alimentar?",
+    perguntas: [
+      { q: "Copos de água?", o: [{ t: "8+", tipo: "otima" }, { t: "5-8", tipo: "boa" }, { t: "2-5", tipo: "regular" }, { t: "Menos de 2", tipo: "precisa" }] },
+      { q: "Frutas e vegetais?", o: [{ t: "5+", tipo: "otima" }, { t: "3-4", tipo: "boa" }, { t: "1-2", tipo: "regular" }, { t: "Nenhum", tipo: "precisa" }] },
+      { q: "Fast food?", o: [{ t: "Raramente", tipo: "otima" }, { t: "1x semana", tipo: "boa" }, { t: "2-3x", tipo: "regular" }, { t: "Quase todo dia", tipo: "precisa" }] },
+      { q: "Café da manhã?", o: [{ t: "Todos os dias", tipo: "otima" }, { t: "Maioria", tipo: "boa" }, { t: "Às vezes", tipo: "regular" }, { t: "Nunca", tipo: "precisa" }] },
+      { q: "Doces?", o: [{ t: "Raro", tipo: "otima" }, { t: "Moderado", tipo: "boa" }, { t: "Frequente", tipo: "regular" }, { t: "Exagerado", tipo: "precisa" }] },
+      { q: "Restrição alimentar?", o: [{ t: "Não", tipo: "otima" }, { t: "Controlada", tipo: "boa" }, { t: "Difícil", tipo: "regular" }, { t: "Muitas", tipo: "precisa" }] },
+      { q: "Peixe?", o: [{ t: "2x+", tipo: "otima" }, { t: "1x", tipo: "boa" }, { t: "Raramente", tipo: "regular" }, { t: "Nunca", tipo: "precisa" }] },
+      { q: "Vitaminas?", o: [{ t: "Com orientação", tipo: "otima" }, { t: "Por conta", tipo: "boa" }, { t: "Às vezes", tipo: "regular" }, { t: "Nunca", tipo: "precisa" }] }
+    ],
+    res: {
+      otima: { nome: "Alimentação Excelente", desc: "Cuidando bem da pele e do cabelo!", dicas: ["Mantenha variedade.", "Beba água.", "Modere doces.", "Exames anuais."] },
+      boa: { nome: "Alimentação Boa", desc: "Saudável, mas pode melhorar.", dicas: ["Mais água.", "Frutas no café.", "Reduza fast food.", "Peixe semanal."] },
+      regular: { nome: "Alimentação Regular", desc: "Pontos de melhoria importantes.", dicas: ["2L de água.", "Fruta por refeição.", "Reduza doces.", "Não pule café."] },
+      precisa: { nome: "Precisa Melhorar", desc: "Pele e cabelo refletem o que você come.", dicas: ["Mais água.", "Frutas e vegetais.", "Reduza fast food.", "Nutricionista."] }
+    }
+  },
+  maquiagem: {
+    titulo: "Qual é o seu estilo de maquiagem?",
+    perguntas: [
+      { q: "Tipo de make?", o: [{ t: "Natural", tipo: "natural" }, { t: "Romântica", tipo: "romantica" }, { t: "Glam", tipo: "glam" }, { t: "Ousada", tipo: "ousada" }] },
+      { q: "Batom favorito?", o: [{ t: "Nude", tipo: "natural" }, { t: "Rosa", tipo: "romantica" }, { t: "Vermelho", tipo: "glam" }, { t: "Colorido", tipo: "ousada" }] },
+      { q: "Onde usa?", o: [{ t: "Dia a dia", tipo: "natural" }, { t: "Encontros", tipo: "romantica" }, { t: "Festas", tipo: "glam" }, { t: "Eventos", tipo: "ousada" }] },
+      { q: "Tempo?", o: [{ t: "Menos 5 min", tipo: "natural" }, { t: "5-15 min", tipo: "romantica" }, { t: "15-30 min", tipo: "glam" }, { t: "30+ min", tipo: "ousada" }] },
+      { q: "Sombras?", o: [{ t: "Nudes", tipo: "natural" }, { t: "Rosas", tipo: "romantica" }, { t: "Escuras", tipo: "glam" }, { t: "Coloridas", tipo: "ousada" }] },
+      { q: "Base?", o: [{ t: "Leve", tipo: "natural" }, { t: "Média", tipo: "romantica" }, { t: "Alta", tipo: "glam" }, { t: "Contorno", tipo: "ousada" }] },
+      { q: "Inspiração?", o: [{ t: "Clean girl", tipo: "natural" }, { t: "Coquette", tipo: "romantica" }, { t: "Tapete", tipo: "glam" }, { t: "Editorial", tipo: "ousada" }] },
+      { q: "Referência?", o: [{ t: "Dia a dia", tipo: "natural" }, { t: "Influencer", tipo: "romantica" }, { t: "Celebridade", tipo: "glam" }, { t: "Artista", tipo: "ousada" }] }
+    ],
+    res: {
+      natural: { nome: "Estilo Natural", desc: "Looks leves que valorizam a beleza natural.", dicas: ["BB cream.", "Máscara e gloss.", "Blush pêssego.", "Batom nude."] },
+      romantica: { nome: "Estilo Romântico", desc: "Looks delicados com tons rosados.", dicas: ["Base média.", "Blush rosa.", "Sombras rosas.", "Gloss."] },
+      glam: { nome: "Estilo Glam", desc: "Looks marcantes com cobertura alta.", dicas: ["Base alta.", "Contorno.", "Sombras escuras.", "Batom vermelho."] },
+      ousada: { nome: "Estilo Ousado", desc: "Cores, ousadia e looks artísticos.", dicas: ["Sombras coloridas.", "Delineados gráficos.", "Batons escuros.", "Cílios coloridos."] }
+    }
+  }
+};
+
+let quizAtual = null;
+let perguntaIdx = 0;
+let votos = {};
+
+function irParaQuiz(tipo) {
+  quizAtual = QUIZZES[tipo];
+  perguntaIdx = 0;
+  votos = {};
+  Object.keys(quizAtual.res).forEach(k => votos[k] = 0);
+  document.getElementById('quizContainer').style.display = 'block';
+  document.getElementById('quizTitle').innerText = quizAtual.titulo;
+  document.getElementById('quizContainer').scrollIntoView({behavior: 'smooth'});
+  renderizarPergunta();
+}
+
+function renderizarPergunta() {
+  const div = document.getElementById('quizContent');
+  if (perguntaIdx >= quizAtual.perguntas.length) {
+    renderizarResultado();
+    return;
+  }
+  const p = quizAtual.perguntas[perguntaIdx];
+  let html = `<p style="font-size:12px; color:#ffc21a; margin-bottom:10px;">Pergunta ${perguntaIdx+1} de ${quizAtual.perguntas.length}</p>`;
+  html += `<h4 style="margin-bottom:15px;">${p.q}</h4>`;
+  p.o.forEach((op, i) => {
+    html += `<button class="quiz-btn" onclick="responderQuiz(${i})">${op.t}</button>`;
+  });
+  div.innerHTML = html;
+}
+
+function responderQuiz(idx) {
+  const opcao = quizAtual.perguntas[perguntaIdx].o[idx];
+  votos[opcao.tipo]++;
+  perguntaIdx++;
+  renderizarPergunta();
+}
+
+function renderizarResultado() {
+  const vencedor = Object.keys(votos).reduce((a, b) => votos[a] >= votos[b] ? a : b);
+  const r = quizAtual.res[vencedor];
+  const msg = `Fiz o quiz da TC Beauty e descobri: ${r.nome}! Faça o seu também.`;
+  const linkWpp = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+  
+  let html = `<div style="text-align:center;">
+    <span style="background:rgba(255,22,141,0.15); color:#ff168d; padding:5px 15px; border-radius:20px; font-size:10px; letter-spacing:2px; text-transform:uppercase; font-weight:bold;">Seu resultado</span>
+    <h3 style="color:#ffc21a; font-size:24px; margin:15px 0;">${r.nome}</h3>
+    <p style="color:#aaa; font-size:14px; text-align:left; margin-bottom:15px;">${r.desc}</p>
+    <div style="background:#0a0a0a; border-left:3px solid #ff168d; padding:15px; border-radius:0 10px 10px 0; text-align:left; margin-bottom:20px;">
+      <h4 style="color:#ffc21a; margin-bottom:10px;">O que você pode fazer</h4>
+      <ul style="color:#aaa; font-size:13px; padding-left:20px;">
+        ${r.dicas.map(d => `<li style="margin-bottom:5px;">${d}</li>`).join('')}
+      </ul>
+    </div>
+    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+      <a href="${linkWpp}" target="_blank" style="background:#25d366; color:#fff; padding:10px 20px; border-radius:20px; text-decoration:none; font-weight:bold; font-size:13px;">Compartilhar no WhatsApp</a>
+      <button onclick="irParaQuiz('${Object.keys(QUIZZES).find(k => QUIZZES[k] === quizAtual)}')" style="background:transparent; color:#ff168d; border:1px solid #ff168d; padding:10px 20px; border-radius:20px; font-weight:bold; font-size:13px; cursor:pointer;">Refazer Quiz</button>
+    </div>
+  </div>`;
+  document.getElementById('quizContent').innerHTML = html;
+}
+
+// ===== LÓGICA DO CALENDÁRIO MENSTRUAL =====
+function calcCalendario() {
+  const dataInput = document.getElementById('calData').value;
+  const duracao = parseInt(document.getElementById('calDuracao').value) || 28;
+  const res = document.getElementById('calResultado');
+  const grade = document.getElementById('calGrade');
+  
+  if (!dataInput) {
+    res.innerHTML = '<p style="color:#aaa; font-size:12px;">Escolha a data.</p>';
+    grade.innerHTML = '';
+    return;
+  }
+  
+  const inicio = new Date(dataInput + 'T00:00:00');
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
+  let dias = [];
+  
+  for (let i = 0; i < duracao; i++) {
+    const d = new Date(inicio);
+    d.setDate(d.getDate() + i);
+    let fase = '';
+    if (i < 5) fase = 'menstrual';
+    else if (i >= 9 && i <= 14) fase = 'fertil';
+    if (i === 13) fase = 'ovulacao';
+    dias.push({ data: d, fase });
+  }
+  
+  const proxMenstruacao = new Date(inicio); proxMenstruacao.setDate(proxMenstruacao.getDate() + duracao);
+  const dataFertilIni = new Date(inicio); dataFertilIni.setDate(dataFertilIni.getDate() + 9);
+  const dataFertilFim = new Date(inicio); dataFertilFim.setDate(dataFertilFim.getDate() + 14);
+  const fmt = (d) => d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+  
+  res.innerHTML = `
+    <div style="background:#0a0a0a; padding:10px; border-radius:8px; border-left:3px solid #ff168d; text-align:center; flex:1; min-width:120px;">
+      <div style="font-size:10px; color:#aaa;">Próxima menstruação</div>
+      <div style="font-size:14px; font-weight:bold;">${fmt(proxMenstruacao)}</div>
+    </div>
+    <div style="background:#0a0a0a; padding:10px; border-radius:8px; border-left:3px solid #ffc21a; text-align:center; flex:1; min-width:120px;">
+      <div style="font-size:10px; color:#aaa;">Período fértil</div>
+      <div style="font-size:14px; font-weight:bold;">${fmt(dataFertilIni)} a ${fmt(dataFertilFim)}</div>
+    </div>
+    <div style="background:#0a0a0a; padding:10px; border-radius:8px; border-left:3px solid #26a69a; text-align:center; flex:1; min-width:120px;">
+      <div style="font-size:10px; color:#aaa;">Duração</div>
+      <div style="font-size:14px; font-weight:bold;">${duracao} dias</div>
+    </div>
+  `;
+  
+  grade.innerHTML = dias.map(({ data, fase }) => {
+    const classe = `cal-dia ${fase}`;
+    return `<div class="${classe}">${data.getDate()}</div>`;
+  }).join('');
+}
+
+// ===== LÓGICA DOS DEPOIMENTOS =====
+let estrelas = 0;
+function setStars(n) {
+  estrelas = n;
+  const spans = document.querySelectorAll('#depEstrelas span');
+  spans.forEach((s, i) => {
+    s.style.color = i < n ? '#ffc21a' : '#333';
+  });
+}
+
+function enviarDepoimento() {
+  const nome = document.getElementById('depNome').value.trim();
+  const texto = document.getElementById('depTexto').value.trim();
+  
+  if (!nome || !texto || estrelas === 0) {
+    alert('Preencha nome, avaliação e depoimento.');
+    return;
+  }
+  
+  const lista = JSON.parse(localStorage.getItem('tc_depoimentos') || '[]');
+  lista.unshift({ nome, texto, estrelas, data: new Date().toLocaleDateString('pt-BR') });
+  localStorage.setItem('tc_depoimentos', JSON.stringify(lista));
+  
+  document.getElementById('depNome').value = '';
+  document.getElementById('depTexto').value = '';
+  setStars(0);
+  renderizarDepoimentos();
+  alert('Obrigada! Seu depoimento foi enviado.');
+}
+
+function renderizarDepoimentos() {
+  const div = document.getElementById('listaDepoimentos');
+  const lista = JSON.parse(localStorage.getItem('tc_depoimentos') || '[]');
+  
+  if (lista.length === 0) {
+    div.innerHTML = '<p style="text-align:center; color:#aaa; font-size:13px;">Nenhum depoimento ainda. Seja a primeira!</p>';
+    return;
+  }
+  
+  div.innerHTML = lista.map(d => `
+    <div class="depoimento-card">
+      <div class="depoimento-topo">
+        <strong style="color:#fff;">${d.nome}</strong>
+        <span style="color:#aaa; font-size:11px;">${d.data}</span>
+      </div>
+      <div style="color:#ffc21a; font-size:14px; margin-bottom:5px;">${'★'.repeat(d.estrelas)}${'☆'.repeat(5 - d.estrelas)}</div>
+      <p style="color:#aaa; font-size:13px; margin:0;">${d.texto}</p>
+    </div>
+  `).join('');
+}
+
+// Inicializar depoimentos ao carregar
+document.addEventListener('DOMContentLoaded', () => {
+  renderizarDepoimentos();
+});
+</script>
+</body>
+</html>
