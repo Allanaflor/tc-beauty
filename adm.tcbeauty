@@ -1,0 +1,1990 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TC Beauty — Painel Administrativo</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        :root {
+            --rosa: #FF1493;
+            --rosa-claro: #FF69B4;
+            --rosa-suave: #ff6b9d;
+            --rosa-escuro: #cc1470;
+            --verde: #00e676;
+            --amarelo: #ffb400;
+            --azul: #29b6f6;
+            --vermelho: #ff1744;
+            --preto-card: #1a1a1a;
+            --preto-fundo: #0f0f0f;
+            --borda: #2a2a2a;
+            --cinza: #888;
+            --cinza-claro: #b0b0b0;
+            --radius: 16px;
+            --radius-sm: 12px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --sombra-rosa: 0 8px 32px rgba(255, 20, 147, 0.15);
+        }
+
+        html, body {
+            background: var(--preto-fundo);
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #1a1a1a; }
+        ::-webkit-scrollbar-thumb { background: var(--rosa); border-radius: 10px; }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes pulseDot {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.6); }
+            50% { box-shadow: 0 0 0 8px rgba(0, 230, 118, 0); }
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 180, 0, 0.5); }
+            50% { box-shadow: 0 0 0 10px rgba(255, 180, 0, 0); }
+        }
+
+        #telaLogin {
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh;
+            background: radial-gradient(ellipse at 50% 30%, #1a0a12, #0a0a0a 80%);
+            padding: 20px; position: relative;
+        }
+        #telaLogin::before {
+            content: ''; position: absolute; inset: -50%;
+            background: radial-gradient(circle at 30% 20%, rgba(255, 20, 147, 0.04), transparent 60%);
+            animation: pulse 8s ease-in-out infinite; pointer-events: none;
+        }
+        .login-box {
+            background: var(--preto-card); padding: 44px 34px; border-radius: 20px;
+            border: 1px solid rgba(255, 20, 147, 0.08);
+            max-width: 400px; width: 100%;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+            position: relative; animation: fadeInUp 0.6s ease;
+        }
+        .login-box .logo {
+            font-size: 30px; font-weight: 700;
+            background: linear-gradient(135deg, var(--rosa), var(--rosa-claro));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; text-align: center; margin-bottom: 4px;
+        }
+        .login-box .sub {
+            text-align: center; color: #666; font-size: 14px;
+            margin-bottom: 28px; font-weight: 300; letter-spacing: 0.5px;
+        }
+        .login-box .sub i { color: var(--rosa); margin-right: 6px; }
+
+        .input-group { position: relative; margin-bottom: 14px; }
+        .input-group i {
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            color: #444; font-size: 16px; transition: var(--transition); pointer-events: none;
+        }
+        .input-group input {
+            width: 100%; padding: 13px 16px 13px 44px;
+            border: 1.5px solid var(--borda); border-radius: var(--radius-sm);
+            background: #121212; color: #e0e0e0; font-size: 14px; transition: var(--transition);
+        }
+        .input-group input:focus {
+            border-color: var(--rosa); outline: none;
+            box-shadow: 0 0 0 4px rgba(255, 20, 147, 0.06); background: #181818;
+        }
+        .input-group input:focus + i { color: var(--rosa); }
+
+        .btn-login {
+            width: 100%; padding: 15px;
+            background: linear-gradient(135deg, var(--rosa), var(--rosa-escuro));
+            color: white; border: none; border-radius: 30px;
+            font-weight: 600; font-size: 16px; cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 20px rgba(255, 20, 147, 0.2); margin-top: 4px;
+        }
+        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 35px rgba(255, 20, 147, 0.3); }
+        .btn-login:active { transform: scale(0.97); }
+
+        .erro {
+            color: var(--vermelho); font-size: 13px; text-align: center;
+            margin-top: 12px; display: none; padding: 8px; border-radius: 8px;
+            background: rgba(255, 23, 68, 0.06); border: 1px solid rgba(255, 23, 68, 0.1);
+        }
+        .link-loja {
+            display: block; text-align: center; margin-top: 18px;
+            color: #555; font-size: 13px; text-decoration: none; transition: var(--transition);
+        }
+        .link-loja:hover { color: var(--rosa); }
+        .link-loja i { margin-right: 6px; }
+
+        #painel { display: none; padding: 24px 4%; max-width: 1280px; margin: 0 auto; animation: fadeInUp 0.5s ease; }
+
+        .painel-header {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 16px; padding: 18px 0 16px;
+            border-bottom: 1px solid rgba(255, 20, 147, 0.06); margin-bottom: 28px;
+        }
+        .painel-header .logo {
+            font-size: 26px; font-weight: 700;
+            background: linear-gradient(135deg, var(--rosa), var(--rosa-claro));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; display: flex; align-items: center; gap: 8px;
+        }
+        .painel-header .logo small {
+            font-size: 12px; -webkit-text-fill-color: #666; background: none;
+            font-weight: 500; padding: 3px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px;
+        }
+
+        .header-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .header-actions .usuario {
+            color: #aaa; font-size: 14px;
+            background: rgba(255, 20, 147, 0.06);
+            padding: 6px 16px; border-radius: 30px;
+            border: 1px solid rgba(255, 20, 147, 0.05);
+        }
+        .header-actions .usuario i { color: var(--rosa); margin-right: 6px; }
+
+        .btn-sair, .btn-loja {
+            background: transparent; padding: 8px 18px; border-radius: 30px;
+            cursor: pointer; font-weight: 500; transition: var(--transition);
+            font-size: 13px; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn-sair { border: 1.5px solid var(--vermelho); color: var(--vermelho); }
+        .btn-sair:hover { background: var(--vermelho); color: white; transform: scale(1.02); }
+        .btn-loja { border: 1.5px solid var(--rosa); color: var(--rosa); }
+        .btn-loja:hover { background: var(--rosa); color: white; transform: scale(1.02); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px; margin-bottom: 32px;
+        }
+        .stat-card {
+            background: var(--preto-card); padding: 18px 14px;
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 20, 147, 0.04);
+            text-align: center; transition: var(--transition);
+            position: relative; overflow: hidden; cursor: pointer;
+        }
+        .stat-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--rosa), transparent);
+            opacity: 0.3;
+        }
+        .stat-card:hover {
+            border-color: rgba(255, 20, 147, 0.12);
+            transform: translateY(-4px); box-shadow: var(--sombra-rosa);
+        }
+        .stat-card i { display: block; font-size: 20px; color: var(--rosa); margin-bottom: 6px; opacity: 0.5; }
+        .stat-card .numero {
+            font-size: 28px; font-weight: 700;
+            background: linear-gradient(135deg, var(--rosa), var(--rosa-suave));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-card .label { color: var(--cinza); font-size: 11px; margin-top: 2px; }
+
+        .stat-card.verde::before { background: linear-gradient(90deg, transparent, var(--verde), transparent); }
+        .stat-card.verde i { color: var(--verde); }
+        .stat-card.verde .numero {
+            background: linear-gradient(135deg, var(--verde), #00c853);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .stat-card.amarelo::before { background: linear-gradient(90deg, transparent, var(--amarelo), transparent); }
+        .stat-card.amarelo i { color: var(--amarelo); }
+        .stat-card.amarelo .numero {
+            background: linear-gradient(135deg, var(--amarelo), #ff8f00);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .stat-card.azul::before { background: linear-gradient(90deg, transparent, var(--azul), transparent); }
+        .stat-card.azul i { color: var(--azul); }
+        .stat-card.azul .numero {
+            background: linear-gradient(135deg, var(--azul), #0277bd);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
+        .painel-nav {
+            display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 28px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02); padding-bottom: 14px;
+        }
+        .painel-nav button {
+            background: transparent; border: none; color: #777;
+            padding: 9px 18px; border-radius: 30px; cursor: pointer;
+            font-weight: 500; font-size: 13px; transition: var(--transition);
+            white-space: nowrap; position: relative;
+        }
+        .painel-nav button:hover { color: #fff; background: rgba(255, 20, 147, 0.06); }
+        .painel-nav button.active {
+            color: #fff; background: rgba(255, 20, 147, 0.10);
+            border: 1px solid rgba(255, 20, 147, 0.08);
+        }
+        .painel-nav button i { margin-right: 6px; }
+        .painel-nav button .novo-badge {
+            position: absolute; top: 4px; right: 6px;
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--verde); animation: pulseDot 1.5s infinite;
+        }
+
+        .painel-section { display: none; animation: fadeInUp 0.4s ease; }
+        .painel-section.active { display: block; }
+
+        .section-header {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 12px; margin-bottom: 20px;
+        }
+        .section-header h3 {
+            color: #fff; font-size: 20px; font-weight: 600;
+            display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+        }
+        .badge-count {
+            background: rgba(255, 20, 147, 0.1); color: var(--rosa);
+            padding: 2px 12px; border-radius: 20px; font-size: 12px;
+        }
+        .badge-count.online { background: rgba(0, 230, 118, 0.12); color: var(--verde); }
+        .badge-count.aviso { background: rgba(255, 180, 0, 0.12); color: var(--amarelo); }
+
+        .btn-add, .btn-sec {
+            border: none; padding: 10px 22px; border-radius: 30px;
+            cursor: pointer; font-weight: 600; font-size: 13px;
+            transition: var(--transition);
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-add {
+            background: linear-gradient(135deg, var(--rosa), var(--rosa-escuro));
+            color: white; box-shadow: 0 4px 16px rgba(255, 20, 147, 0.15);
+        }
+        .btn-add:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255, 20, 147, 0.25); }
+        .btn-sec {
+            background: transparent; color: var(--vermelho);
+            border: 1.5px solid rgba(255, 23, 68, 0.3) !important;
+        }
+        .btn-sec:hover { background: rgba(255, 23, 68, 0.1); }
+
+        .form-produto {
+            background: var(--preto-card); padding: 32px;
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 20, 147, 0.08);
+            max-width: 1000px; margin: 0 auto 24px;
+            display: none; animation: fadeInUp 0.3s ease;
+        }
+        .form-produto.aberto { display: block; }
+        .form-produto .form-titulo {
+            color: #fff; font-size: 18px; margin-bottom: 22px;
+            display: flex; align-items: center; gap: 10px;
+            padding-bottom: 16px; border-bottom: 1px solid rgba(255, 20, 147, 0.06);
+        }
+        .form-produto .form-titulo i { color: var(--rosa); }
+
+        .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+        .form-grid .full { grid-column: 1 / -1; }
+
+        .form-field label {
+            display: block; color: #999; font-size: 11px; font-weight: 600;
+            margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.6px;
+        }
+        .form-field input, .form-field select {
+            width: 100%; padding: 12px 16px;
+            border: 1.5px solid var(--borda); border-radius: var(--radius-sm);
+            background: #121212; color: #e0e0e0; font-size: 14px;
+            transition: var(--transition); font-family: 'Poppins', sans-serif;
+        }
+        .form-field input::placeholder { color: #555; }
+        .form-field input:focus, .form-field select:focus {
+            border-color: var(--rosa); outline: none;
+            box-shadow: 0 0 0 4px rgba(255, 20, 147, 0.06); background: #181818;
+        }
+
+        .imagem-area { display: grid; grid-template-columns: 140px 1fr; gap: 18px; align-items: stretch; }
+        .imagem-preview {
+            width: 140px; height: 140px; border-radius: var(--radius-sm);
+            border: 2px dashed var(--borda); display: flex;
+            align-items: center; justify-content: center;
+            overflow: hidden; background: #121212;
+            position: relative; transition: var(--transition);
+        }
+        .imagem-preview.tem-imagem { border-style: solid; border-color: rgba(255, 20, 147, 0.3); }
+        .imagem-preview img { width: 100%; height: 100%; object-fit: cover; }
+        .imagem-preview i { color: #333; font-size: 34px; }
+
+        .imagem-controles { display: flex; flex-direction: column; gap: 10px; justify-content: center; }
+        .imagem-controles .divisor {
+            display: flex; align-items: center; gap: 8px;
+            color: #555; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .imagem-controles .divisor::before, .imagem-controles .divisor::after {
+            content: ''; flex: 1; height: 1px; background: var(--borda);
+        }
+        .upload-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            gap: 10px; padding: 12px 20px;
+            background: rgba(255, 20, 147, 0.08);
+            border: 1.5px dashed rgba(255, 20, 147, 0.3);
+            border-radius: var(--radius-sm); color: var(--rosa);
+            font-weight: 600; font-size: 13px; cursor: pointer;
+            transition: var(--transition); width: 100%;
+        }
+        .upload-btn:hover { background: rgba(255, 20, 147, 0.15); border-color: var(--rosa); }
+        .upload-btn input { display: none; }
+
+        .btn-limpar-imagem {
+            background: transparent; border: 1px solid var(--borda); color: #777;
+            padding: 8px 14px; border-radius: var(--radius-sm);
+            font-size: 12px; cursor: pointer; transition: var(--transition); width: 100%;
+        }
+        .btn-limpar-imagem:hover { color: var(--vermelho); border-color: var(--vermelho); }
+
+        .imagem-hint { color: #666; font-size: 11px; margin-top: 6px; line-height: 1.5; }
+
+        .form-actions {
+            display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px;
+            padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .form-actions button {
+            padding: 12px 32px; border-radius: 30px; border: none;
+            font-weight: 600; cursor: pointer; transition: var(--transition);
+            font-size: 14px; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-salvar {
+            background: linear-gradient(135deg, var(--rosa), var(--rosa-escuro));
+            color: white; box-shadow: 0 4px 16px rgba(255, 20, 147, 0.15);
+        }
+        .btn-salvar:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255, 20, 147, 0.25); }
+        .btn-cancelar {
+            background: transparent; color: #888;
+            border: 1.5px solid var(--borda) !important;
+        }
+        .btn-cancelar:hover { color: #fff; border-color: #444 !important; }
+
+        .tabela-toolbar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+        .busca-wrap { position: relative; flex: 1; min-width: 220px; }
+        .busca-wrap i {
+            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+            color: #555; font-size: 14px; pointer-events: none;
+        }
+        .busca-wrap input {
+            width: 100%; padding: 12px 16px 12px 44px;
+            border: 1.5px solid var(--borda); border-radius: 30px;
+            background: var(--preto-card); color: #e0e0e0;
+            font-size: 13px; transition: var(--transition);
+        }
+        .busca-wrap input:focus {
+            border-color: var(--rosa); outline: none;
+            box-shadow: 0 0 0 4px rgba(255, 20, 147, 0.05);
+        }
+
+        .tabela-container {
+            overflow-x: auto; background: var(--preto-card);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 20, 147, 0.04); padding: 4px;
+        }
+        .tabela-container table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 640px; }
+        .tabela-container thead th {
+            text-align: left; padding: 14px 16px; color: #777;
+            font-weight: 500; border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px;
+            white-space: nowrap;
+        }
+        .tabela-container tbody td {
+            padding: 12px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            color: #ccc; font-size: 13px; vertical-align: middle;
+        }
+        .tabela-container tbody tr:hover td { background: rgba(255, 20, 147, 0.02); }
+
+        .produto-img {
+            width: 52px; height: 52px; border-radius: 10px;
+            object-fit: cover; border: 1px solid rgba(255, 255, 255, 0.06);
+            background: #121212; display: block;
+        }
+        .produto-nome { font-weight: 600; color: #fff; font-size: 13px; }
+        .produto-parcelas { color: #666; font-size: 11px; margin-top: 2px; }
+        .produto-categoria {
+            color: var(--cinza-claro); font-size: 12px;
+            padding: 3px 10px; background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px; display: inline-block;
+        }
+        .produto-preco { color: var(--rosa); font-weight: 600; font-size: 14px; }
+        .produto-preco-antigo {
+            color: #666; font-size: 11px;
+            text-decoration: line-through; display: block; margin-top: 2px;
+        }
+
+        .acoes { display: flex; gap: 6px; flex-wrap: wrap; }
+        .acoes button {
+            background: transparent; border: none; padding: 7px 12px;
+            border-radius: 20px; cursor: pointer; font-size: 12px;
+            transition: var(--transition); font-weight: 500;
+            display: inline-flex; align-items: center; gap: 5px;
+        }
+        .btn-editar { color: var(--amarelo); border: 1px solid rgba(245, 166, 35, 0.15); }
+        .btn-editar:hover { background: rgba(245, 166, 35, 0.1); }
+        .btn-excluir { color: var(--vermelho); border: 1px solid rgba(255, 23, 68, 0.15); }
+        .btn-excluir:hover { background: rgba(255, 23, 68, 0.1); }
+
+        .vazio { text-align: center; padding: 60px 20px; color: #666; }
+        .vazio i { font-size: 46px; color: #222; display: block; margin-bottom: 14px; }
+
+        .clientes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 14px;
+        }
+        .cliente-card {
+            background: var(--preto-card);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 20, 147, 0.06);
+            padding: 18px; display: flex; gap: 14px;
+            transition: var(--transition); position: relative;
+            animation: slideIn 0.4s ease;
+        }
+        .cliente-card:hover {
+            border-color: rgba(255, 20, 147, 0.2);
+            transform: translateY(-3px);
+            box-shadow: var(--sombra-rosa);
+        }
+        .cliente-card.online {
+            border-color: rgba(0, 230, 118, 0.25);
+            background: linear-gradient(180deg, rgba(0, 230, 118, 0.03), transparent 60%);
+        }
+        .cliente-avatar {
+            width: 64px; height: 64px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--rosa), var(--rosa-escuro));
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 24px; color: white;
+            overflow: hidden; flex-shrink: 0; position: relative;
+            border: 2px solid rgba(255, 20, 147, 0.2);
+        }
+        .cliente-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .cliente-avatar .status-online {
+            position: absolute; bottom: -1px; right: -1px;
+            width: 16px; height: 16px; border-radius: 50%;
+            background: var(--verde); border: 2.5px solid var(--preto-card);
+            animation: pulseDot 1.5s infinite;
+        }
+        .cliente-info { flex: 1; min-width: 0; }
+        .cliente-info .nome {
+            color: #fff; font-weight: 600; font-size: 15px;
+            margin-bottom: 6px; display: flex; align-items: center;
+            gap: 8px; flex-wrap: wrap;
+        }
+        .cliente-info .nome .badge-online {
+            background: rgba(0, 230, 118, 0.12);
+            color: var(--verde); font-size: 9px; padding: 2px 8px;
+            border-radius: 20px; font-weight: 700; letter-spacing: 0.6px;
+        }
+        .cliente-info .linha {
+            color: #aaa; font-size: 12px; margin-bottom: 4px;
+            display: flex; align-items: center; gap: 8px;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .cliente-info .linha i { color: var(--rosa); width: 14px; font-size: 11px; flex-shrink: 0; }
+        .cliente-info .linha .valor { overflow: hidden; text-overflow: ellipsis; }
+
+        .btn-remover-cliente {
+            position: absolute; top: 10px; right: 10px;
+            background: transparent; border: none; color: #555;
+            cursor: pointer; padding: 6px 8px; border-radius: 50%;
+            transition: var(--transition); font-size: 12px;
+        }
+        .btn-remover-cliente:hover { background: rgba(255, 23, 68, 0.1); color: var(--vermelho); }
+
+        .agend-filtros {
+            display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px;
+            padding: 14px; background: var(--preto-card);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 20, 147, 0.04);
+        }
+        .filtro-chip {
+            background: transparent; border: 1.5px solid var(--borda);
+            color: #999; padding: 8px 16px; border-radius: 30px;
+            cursor: pointer; font-size: 12px; font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .filtro-chip:hover { color: #fff; border-color: #444; }
+        .filtro-chip.active {
+            background: rgba(255, 20, 147, 0.12);
+            border-color: var(--rosa); color: var(--rosa);
+        }
+        .filtro-chip .cont {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 1px 8px; border-radius: 20px; font-size: 10px;
+        }
+        .filtro-chip.active .cont { background: rgba(255, 20, 147, 0.2); }
+
+        .agend-lista {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 14px;
+        }
+        .agend-card {
+            background: var(--preto-card);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 20, 147, 0.06);
+            padding: 18px; transition: var(--transition);
+            position: relative; animation: slideIn 0.4s ease;
+            overflow: hidden;
+        }
+        .agend-card::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 4px; height: 100%; background: var(--rosa);
+        }
+        .agend-card:hover {
+            border-color: rgba(255, 20, 147, 0.2);
+            transform: translateY(-3px);
+            box-shadow: var(--sombra-rosa);
+        }
+
+        .agend-card.status-pendente::before { background: var(--amarelo); }
+        .agend-card.status-confirmado::before { background: var(--azul); }
+        .agend-card.status-concluido::before { background: var(--verde); }
+        .agend-card.status-cancelado::before { background: var(--vermelho); }
+
+        .agend-card.status-pendente { border-color: rgba(255, 180, 0, 0.15); }
+        .agend-card.status-confirmado { border-color: rgba(41, 182, 246, 0.15); }
+        .agend-card.status-concluido { border-color: rgba(0, 230, 118, 0.15); }
+        .agend-card.status-cancelado { border-color: rgba(255, 23, 68, 0.15); opacity: 0.75; }
+        .agend-card.status-pendente { animation: slideIn 0.4s ease, glow 2.5s infinite; }
+
+        .agend-header {
+            display: flex; justify-content: space-between;
+            align-items: flex-start; gap: 10px; margin-bottom: 12px;
+        }
+        .agend-cliente { display: flex; align-items: center; gap: 10px; min-width: 0; }
+        .agend-avatar {
+            width: 42px; height: 42px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--rosa), var(--rosa-escuro));
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 15px; color: white;
+            overflow: hidden; flex-shrink: 0;
+            border: 2px solid rgba(255, 20, 147, 0.2);
+        }
+        .agend-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .agend-cliente .nome {
+            color: #fff; font-weight: 600; font-size: 14px;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .agend-cliente .tel { color: #888; font-size: 11px; margin-top: 2px; }
+
+        .status-badge {
+            padding: 4px 12px; border-radius: 20px;
+            font-size: 10px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.6px;
+            display: inline-flex; align-items: center; gap: 5px;
+            white-space: nowrap;
+        }
+        .status-badge.pendente { background: rgba(255, 180, 0, 0.12); color: var(--amarelo); }
+        .status-badge.confirmado { background: rgba(41, 182, 246, 0.12); color: var(--azul); }
+        .status-badge.concluido { background: rgba(0, 230, 118, 0.12); color: var(--verde); }
+        .status-badge.cancelado { background: rgba(255, 23, 68, 0.12); color: var(--vermelho); }
+
+        .agend-detalhes {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 8px; margin-bottom: 12px;
+            padding-bottom: 12px; border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+        }
+        .agend-detalhe {
+            display: flex; align-items: center; gap: 8px;
+            color: #bbb; font-size: 12px;
+            overflow: hidden; text-overflow: ellipsis;
+        }
+        .agend-detalhe i { color: var(--rosa); font-size: 12px; flex-shrink: 0; width: 14px; }
+        .agend-detalhe strong { color: #ddd; font-weight: 500; }
+
+        .agend-obs {
+            color: #888; font-size: 11px; font-style: italic;
+            margin-bottom: 10px; padding: 8px 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px; line-height: 1.5;
+            border-left: 2px solid rgba(255, 20, 147, 0.2);
+        }
+
+        .agend-acoes { display: flex; gap: 6px; flex-wrap: wrap; }
+        .agend-acoes button {
+            flex: 1; min-width: 80px;
+            background: transparent; border: 1px solid var(--borda);
+            color: #aaa; padding: 8px 10px;
+            border-radius: 20px; cursor: pointer;
+            font-size: 11px; font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+        }
+        .agend-acoes button:hover { color: #fff; border-color: #555; }
+        .agend-acoes .btn-confirmar:hover { background: rgba(41, 182, 246, 0.1); color: var(--azul); border-color: var(--azul); }
+        .agend-acoes .btn-concluir:hover { background: rgba(0, 230, 118, 0.1); color: var(--verde); border-color: var(--verde); }
+        .agend-acoes .btn-cancelar-ag:hover { background: rgba(255, 180, 0, 0.1); color: var(--amarelo); border-color: var(--amarelo); }
+        .agend-acoes .btn-excluir-ag:hover { background: rgba(255, 23, 68, 0.1); color: var(--vermelho); border-color: var(--vermelho); }
+
+        .aviso-info {
+            background: rgba(255, 20, 147, 0.06);
+            border: 1px solid rgba(255, 20, 147, 0.15);
+            color: var(--rosa-suave);
+            padding: 10px 16px; border-radius: var(--radius-sm);
+            font-size: 12px; display: flex; align-items: center; gap: 10px;
+            margin-bottom: 16px;
+        }
+        .aviso-info.verde {
+            background: rgba(0, 230, 118, 0.06);
+            border-color: rgba(0, 230, 118, 0.15);
+            color: var(--verde);
+        }
+
+        .avaliacao-admin-item, .feedback-admin-item {
+            background: var(--preto-card); padding: 18px 22px;
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 20, 147, 0.04);
+            margin-bottom: 10px; transition: var(--transition);
+        }
+        .avaliacao-admin-item:hover, .feedback-admin-item:hover { border-color: rgba(255, 20, 147, 0.12); }
+        .avaliacao-admin-item .header {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 6px;
+        }
+        .avaliacao-admin-item .header .nome { font-weight: 600; color: #fff; font-size: 14px; }
+        .avaliacao-admin-item .header .estrelas { color: var(--amarelo); font-size: 14px; letter-spacing: 2px; }
+        .avaliacao-admin-item .header .data { color: #555; font-size: 11px; }
+        .avaliacao-admin-item .texto, .feedback-admin-item .texto {
+            color: #bbb; font-size: 13px; margin: 6px 0 12px; line-height: 1.6;
+        }
+        .avaliacao-admin-item .texto strong { color: var(--rosa); font-weight: 600; }
+        .feedback-admin-item .header .nome { font-weight: 600; color: var(--rosa); font-size: 14px; }
+
+        .badge-resposta {
+            background: rgba(255, 20, 147, 0.06); color: var(--rosa);
+            padding: 2px 12px; border-radius: 20px; font-size: 10px;
+            font-weight: 500; border: 1px solid rgba(255, 20, 147, 0.08);
+        }
+        .btn-responder {
+            color: var(--rosa); border: 1px solid rgba(255, 20, 147, 0.15) !important;
+            background: transparent; padding: 7px 16px; border-radius: 20px;
+            cursor: pointer; font-size: 12px; transition: var(--transition);
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn-responder:hover { background: rgba(255, 20, 147, 0.08); }
+
+        .toast {
+            position: fixed; top: 20px; right: 20px; left: 20px;
+            max-width: 400px; margin-left: auto;
+            background: #1a1a1a; border: 1px solid rgba(255, 20, 147, 0.15);
+            padding: 16px 20px; border-radius: 14px; color: #fff;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.7);
+            z-index: 99999; transform: translateY(-150%);
+            transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            backdrop-filter: blur(12px);
+        }
+        .toast.mostrar { transform: translateY(0); }
+        .toast .toast-titulo { font-weight: 600; color: var(--rosa); font-size: 14px; }
+        .toast .toast-texto { color: #aaa; font-size: 13px; margin-top: 3px; }
+
+        @media (max-width: 900px) { .form-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 700px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .form-produto { padding: 22px; }
+            .imagem-area { grid-template-columns: 1fr; justify-items: center; }
+            .imagem-controles { width: 100%; }
+            .agend-detalhes { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 600px) {
+            #painel { padding: 20px 14px; }
+            .painel-header { flex-direction: column; align-items: stretch; gap: 12px; }
+            .painel-header .logo { justify-content: center; font-size: 22px; }
+            .header-actions { justify-content: center; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .stat-card { padding: 12px 10px; }
+            .stat-card .numero { font-size: 20px; }
+            .stat-card i { font-size: 16px; }
+            .stat-card .label { font-size: 10px; }
+            .painel-nav { justify-content: center; }
+            .painel-nav button { font-size: 11px; padding: 7px 12px; }
+            .tabela-container table { font-size: 12px; min-width: 500px; }
+            .tabela-container thead th, .tabela-container tbody td { padding: 10px; }
+            .produto-img { width: 42px; height: 42px; }
+            .form-actions { flex-direction: column; }
+            .form-actions button { width: 100%; justify-content: center; }
+            .section-header h3 { font-size: 17px; }
+            .clientes-grid, .agend-lista { grid-template-columns: 1fr; }
+            .login-box { padding: 30px 22px; }
+            .login-box .logo { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN -->
+    <div id="telaLogin">
+        <div class="login-box">
+            <div class="logo">✦ TC Beauty</div>
+            <div class="sub"><i class="fa-solid fa-lock"></i> Painel Administrativo</div>
+
+            <div class="input-group">
+                <input type="text" id="loginUsuario" placeholder="Usuário" value="luiza" />
+                <i class="fa-regular fa-user"></i>
+            </div>
+            <div class="input-group">
+                <input type="password" id="loginSenha" placeholder="Senha" value="123456" />
+                <i class="fa-regular fa-lock"></i>
+            </div>
+
+            <button class="btn-login" onclick="fazerLogin()">
+                <i class="fa-solid fa-right-to-bracket"></i> Entrar
+            </button>
+
+            <div class="erro" id="loginErro">❌ Usuário ou senha incorretos!</div>
+
+            <!-- 🔗 LINK PARA O SITE DO CLIENTE -->
+            <a href="../index.html" class="link-loja">
+                <i class="fa-solid fa-store"></i> Voltar para a Loja
+            </a>
+        </div>
+    </div>
+
+    <!-- PAINEL -->
+    <div id="painel">
+
+        <div class="painel-header">
+            <div class="logo">✦ TC Beauty <small>Painel ADM</small></div>
+            <div class="header-actions">
+                <span class="usuario">
+                    <i class="fa-regular fa-user"></i>
+                    <span id="usuarioNome">Luíza</span>
+                </span>
+                <!-- 🔗 LINK PARA O SITE DO CLIENTE -->
+                <a href="../index.html" class="btn-loja" target="_blank" rel="noopener">
+                    <i class="fa-solid fa-store"></i> Ver Loja
+                </a>
+                <button class="btn-sair" onclick="sair()">
+                    <i class="fa-solid fa-right-from-bracket"></i> Sair
+                </button>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fa-regular fa-box"></i>
+                <div class="numero" id="statProdutos">0</div>
+                <div class="label">Produtos</div>
+            </div>
+            <div class="stat-card">
+                <i class="fa-regular fa-users"></i>
+                <div class="numero" id="statClientes">0</div>
+                <div class="label">Clientes</div>
+            </div>
+            <div class="stat-card amarelo">
+                <i class="fa-regular fa-calendar-check"></i>
+                <div class="numero" id="statAgendHoje">0</div>
+                <div class="label">Hoje</div>
+            </div>
+            <div class="stat-card azul">
+                <i class="fa-regular fa-clock"></i>
+                <div class="numero" id="statAgendPendentes">0</div>
+                <div class="label">Pendentes</div>
+            </div>
+            <div class="stat-card verde">
+                <i class="fa-regular fa-circle-check"></i>
+                <div class="numero" id="statOnline">0</div>
+                <div class="label">Online agora</div>
+            </div>
+        </div>
+
+        <div class="painel-nav">
+            <button class="active" onclick="abrirSecao('produtos', this)">
+                <i class="fa-regular fa-box"></i> Produtos
+            </button>
+            <button onclick="abrirSecao('agendamentos', this)" id="navAgendamentos">
+                <i class="fa-regular fa-calendar-check"></i> Agendamentos
+                <span class="novo-badge" id="badgeNovoAgend" style="display:none;"></span>
+            </button>
+            <button onclick="abrirSecao('clientes', this)" id="navClientes">
+                <i class="fa-regular fa-users"></i> Clientes
+                <span class="novo-badge" id="badgeNovoCliente" style="display:none;"></span>
+            </button>
+            <button onclick="abrirSecao('avaliacoes', this)">
+                <i class="fa-regular fa-star"></i> Avaliações
+            </button>
+            <button onclick="abrirSecao('feedbacks', this)">
+                <i class="fa-regular fa-comment"></i> Feedbacks
+            </button>
+        </div>
+
+        <!-- PRODUTOS -->
+        <div class="painel-section active" id="sec-produtos">
+            <div class="section-header">
+                <h3>📦 Gerenciar Produtos <span class="badge-count" id="produtosBadge">0</span></h3>
+                <button class="btn-add" onclick="abrirFormProduto()">
+                    <i class="fa-solid fa-plus"></i> Novo Produto
+                </button>
+            </div>
+
+            <div class="form-produto" id="formProduto">
+                <div class="form-titulo">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                    <span id="formProdutoTitulo">Adicionar Produto</span>
+                </div>
+
+                <input type="hidden" id="produtoEditId" value="" />
+
+                <div class="form-grid">
+                    <div class="form-field full">
+                        <label>Nome do Produto *</label>
+                        <input type="text" id="produtoNome" placeholder="Ex: Base Matte Premium" maxlength="80" />
+                    </div>
+
+                    <div class="form-field">
+                        <label>Preço (R$) *</label>
+                        <input type="number" id="produtoPreco" placeholder="25.00" step="0.01" min="0" />
+                    </div>
+                    <div class="form-field">
+                        <label>Preço Antigo (R$)</label>
+                        <input type="number" id="produtoPrecoAntigo" placeholder="35.00" step="0.01" min="0" />
+                    </div>
+                    <div class="form-field">
+                        <label>Parcelamento</label>
+                        <input type="text" id="produtoParcelas" placeholder="6x de R$ 4,17" maxlength="40" />
+                    </div>
+
+                    <div class="form-field">
+                        <label>Categoria</label>
+                        <select id="produtoCategoria">
+                            <option value="Maquiagem">Maquiagem</option>
+                            <option value="Skincare">Skincare</option>
+                            <option value="Perfumes">Perfumes</option>
+                            <option value="Cabelos">Cabelos</option>
+                            <option value="Corpo">Corpo</option>
+                            <option value="Acessórios">Acessórios</option>
+                            <option value="Promoções">Promoções</option>
+                            <option value="Novidades">Novidades</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label>Destaque?</label>
+                        <select id="produtoDestaque">
+                            <option value="true">Sim</option>
+                            <option value="false">Não</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label>Vendidos (quantidade)</label>
+                        <input type="number" id="produtoVendidos" placeholder="0" value="0" min="0" />
+                    </div>
+
+                    <div class="form-field full">
+                        <label>Imagem do Produto *</label>
+                        <div class="imagem-area">
+                            <div class="imagem-preview" id="imagemPreview">
+                                <i class="fa-regular fa-image"></i>
+                            </div>
+                            <div class="imagem-controles">
+                                <label class="upload-btn" for="produtoImagemFile">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                    Enviar do dispositivo
+                                    <input type="file" id="produtoImagemFile" accept="image/*" onchange="uploadImagemLocal(event)" />
+                                </label>
+                                <div class="divisor">ou</div>
+                                <input type="text" id="produtoImagem"
+                                       placeholder="Cole a URL ou o nome do arquivo (ex: batom.jpg)"
+                                       oninput="onUrlImagemChange()" />
+                                <button type="button" class="btn-limpar-imagem" onclick="limparImagem()">
+                                    <i class="fa-regular fa-trash-can"></i> Remover imagem
+                                </button>
+                            </div>
+                        </div>
+                        <div class="imagem-hint">
+                            <i class="fa-regular fa-circle-info"></i>
+                            Envie uma imagem do seu celular/PC (até 900KB) <b>ou</b> cole a URL completa da imagem.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn-salvar" onclick="salvarProduto()">
+                        <i class="fa-regular fa-floppy-disk"></i> Salvar Produto
+                    </button>
+                    <button class="btn-cancelar" onclick="fecharFormProduto()">Cancelar</button>
+                </div>
+            </div>
+
+            <div class="tabela-toolbar">
+                <div class="busca-wrap">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="buscaProduto" placeholder="Buscar por nome ou categoria..." oninput="filtrarProdutos()" />
+                </div>
+            </div>
+
+            <div class="tabela-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:70px;">Imagem</th>
+                            <th>Produto</th>
+                            <th>Categoria</th>
+                            <th>Preço</th>
+                            <th style="width:150px;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaProdutos"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- AGENDAMENTOS -->
+        <div class="painel-section" id="sec-agendamentos">
+            <div class="section-header">
+                <h3>
+                    📅 Agendamentos
+                    <span class="badge-count" id="agendBadge">0</span>
+                    <span class="badge-count aviso" id="agendPendentesBadge">0 pendentes</span>
+                </h3>
+                <button class="btn-sec" onclick="limparAgendamentos('cancelado')">
+                    <i class="fa-regular fa-broom"></i> Limpar cancelados
+                </button>
+            </div>
+
+            <div class="aviso-info verde">
+                <i class="fa-solid fa-satellite-dish"></i>
+                <span>Atualização em tempo real — quando um cliente agendar na loja, o pedido aparece aqui automaticamente.</span>
+            </div>
+
+            <div class="agend-filtros" id="agendFiltrosStatus">
+                <button class="filtro-chip active" data-filtro="todos" onclick="setFiltroAgend('todos', this)">
+                    <i class="fa-regular fa-list"></i> Todos <span class="cont" id="cont-todos">0</span>
+                </button>
+                <button class="filtro-chip" data-filtro="pendente" onclick="setFiltroAgend('pendente', this)">
+                    <i class="fa-regular fa-hourglass-half"></i> Pendentes <span class="cont" id="cont-pendente">0</span>
+                </button>
+                <button class="filtro-chip" data-filtro="confirmado" onclick="setFiltroAgend('confirmado', this)">
+                    <i class="fa-regular fa-circle-check"></i> Confirmados <span class="cont" id="cont-confirmado">0</span>
+                </button>
+                <button class="filtro-chip" data-filtro="concluido" onclick="setFiltroAgend('concluido', this)">
+                    <i class="fa-regular fa-circle-check"></i> Concluídos <span class="cont" id="cont-concluido">0</span>
+                </button>
+                <button class="filtro-chip" data-filtro="cancelado" onclick="setFiltroAgend('cancelado', this)">
+                    <i class="fa-regular fa-circle-xmark"></i> Cancelados <span class="cont" id="cont-cancelado">0</span>
+                </button>
+            </div>
+
+            <div class="agend-filtros" id="agendFiltrosData">
+                <button class="filtro-chip active" data-periodo="todos" onclick="setPeriodoAgend('todos', this)">
+                    <i class="fa-regular fa-calendar"></i> Qualquer data
+                </button>
+                <button class="filtro-chip" data-periodo="hoje" onclick="setPeriodoAgend('hoje', this)">
+                    <i class="fa-regular fa-calendar-day"></i> Hoje
+                </button>
+                <button class="filtro-chip" data-periodo="semana" onclick="setPeriodoAgend('semana', this)">
+                    <i class="fa-regular fa-calendar-week"></i> Próximos 7 dias
+                </button>
+                <button class="filtro-chip" data-periodo="passado" onclick="setPeriodoAgend('passado', this)">
+                    <i class="fa-regular fa-clock-rotate-left"></i> Passados
+                </button>
+            </div>
+
+            <div class="agend-lista" id="listaAgendamentos"></div>
+        </div>
+
+        <!-- CLIENTES -->
+        <div class="painel-section" id="sec-clientes">
+            <div class="section-header">
+                <h3>
+                    👥 Clientes Cadastrados
+                    <span class="badge-count" id="clientesBadge">0</span>
+                    <span class="badge-count online" id="clientesOnlineBadge">0 online</span>
+                </h3>
+                <button class="btn-sec" onclick="limparClientes()">
+                    <i class="fa-regular fa-trash-can"></i> Limpar lista
+                </button>
+            </div>
+
+            <div class="aviso-info verde">
+                <i class="fa-solid fa-satellite-dish"></i>
+                <span>Atualização em tempo real — quando um cliente fizer login na loja, ele aparece aqui automaticamente.</span>
+            </div>
+
+            <div class="clientes-toolbar" style="margin-bottom:16px;">
+                <div class="busca-wrap">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="buscaCliente" placeholder="Buscar por nome, e-mail ou telefone..." oninput="filtrarClientes()" />
+                </div>
+            </div>
+
+            <div class="clientes-grid" id="listaClientes"></div>
+        </div>
+
+        <!-- AVALIAÇÕES -->
+        <div class="painel-section" id="sec-avaliacoes">
+            <div class="section-header">
+                <h3>⭐ Avaliações dos Clientes <span class="badge-count" id="avaliacoesBadge">0</span></h3>
+            </div>
+            <div id="listaAvaliacoesAdmin"></div>
+        </div>
+
+        <!-- FEEDBACKS -->
+        <div class="painel-section" id="sec-feedbacks">
+            <div class="section-header">
+                <h3>💬 Feedbacks dos Clientes <span class="badge-count" id="feedbacksBadge">0</span></h3>
+            </div>
+            <div id="listaFeedbacksAdmin"></div>
+        </div>
+
+    </div>
+
+    <div class="toast" id="toast">
+        <div class="toast-titulo" id="toastTitulo">✨ Sucesso!</div>
+        <div class="toast-texto" id="toastTexto">Ação realizada com sucesso.</div>
+    </div>
+
+    <script>
+    /* ================================================================
+       PAINEL ADMIN — TC BEAUTY
+       ================================================================ */
+
+    const CREDENCIAIS = { usuario: 'luiza', senha: '123456' };
+    const TAMANHO_MAX_IMG = 900 * 1024;
+    const TEMPO_ONLINE_MS = 5 * 60 * 1000;
+
+    const STORAGE_KEYS = {
+        produtos: 'tcbeauty_produtos',
+        avaliacoes: 'tcbeauty_avaliacoes',
+        feedbacks: 'tcbeauty_feedbacks',
+        favoritos: 'tcbeauty_favoritos',
+        clientes: 'tcbeauty_usuarios_logados',
+        agendamentos: 'tcbeauty_agendamentos'
+    };
+
+    const PRODUTOS_SEED_VERSION = 'v2-catalogo-30-produtos';
+
+    const PRODUTOS_INICIAIS = [
+        { id: 1, nome: 'Base Matte Premium', preco: 15.00, precoAntigo: 25.00, categoria: 'Maquiagem', destaque: true, vendidos: 342, parcelas: '3x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1631730359585-38a4935cbec4?w=400&h=400&fit=crop&q=80' },
+        { id: 2, nome: 'Base Iluminadora', preco: 15.00, precoAntigo: 25.00, categoria: 'Maquiagem', destaque: true, vendidos: 289, parcelas: '3x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1596704017254-9b121068fb31?w=400&h=400&fit=crop&q=80' },
+        { id: 3, nome: 'Pó Compacto Premium', preco: 15.00, precoAntigo: 25.00, categoria: 'Maquiagem', destaque: true, vendidos: 215, parcelas: '3x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?w=400&h=400&fit=crop&q=80' },
+        { id: 4, nome: 'Base Líquida Natural', preco: 15.00, precoAntigo: 20.00, categoria: 'Maquiagem', destaque: true, vendidos: 178, parcelas: '3x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1617897903246-719242758050?w=400&h=400&fit=crop&q=80' },
+        { id: 5, nome: 'Base Matte Bak', preco: 15.00, precoAntigo: 25.00, categoria: 'Maquiagem', destaque: true, vendidos: 156, parcelas: '3x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop&q=80' },
+        { id: 6, nome: 'Corretivo Líquido', preco: 15.00, precoAntigo: 20.00, categoria: 'Maquiagem', destaque: true, vendidos: 134, parcelas: '3x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1631730359585-38a4935cbec4?w=400&h=400&fit=crop&q=80&sat=1' },
+        { id: 7, nome: 'Base Oil Free', preco: 15.00, precoAntigo: 25.00, categoria: 'Maquiagem', destaque: true, vendidos: 198, parcelas: '3x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1596704017254-9b121068fb31?w=400&h=400&fit=crop&q=80&sat=2' },
+        { id: 8, nome: 'Base Hidratante', preco: 15.00, precoAntigo: 25.00, categoria: 'Maquiagem', destaque: true, vendidos: 167, parcelas: '3x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1617897903246-719242758050?w=400&h=400&fit=crop&q=80&sat=3' },
+        { id: 9, nome: 'Base Pó Mineral', preco: 15.00, precoAntigo: 25.00, categoria: 'Maquiagem', destaque: true, vendidos: 145, parcelas: '3x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?w=400&h=400&fit=crop&q=80&sat=4' },
+        { id: 10, nome: 'Base Cobertura Total', preco: 15.00, precoAntigo: 25.00, categoria: 'Maquiagem', destaque: true, vendidos: 187, parcelas: '3x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop&q=80&sat=5' },
+        { id: 11, nome: 'Batom Vivaí Cremoso', preco: 10.00, precoAntigo: 20.00, categoria: 'Maquiagem', destaque: true, vendidos: 456, parcelas: '2x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400&h=400&fit=crop&q=80' },
+        { id: 12, nome: 'Batom Matte Luxo', preco: 10.00, precoAntigo: 20.00, categoria: 'Maquiagem', destaque: true, vendidos: 421, parcelas: '2x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=400&h=400&fit=crop&q=80' },
+        { id: 13, nome: 'Batom Vermelho Matte', preco: 10.00, precoAntigo: 20.00, categoria: 'Maquiagem', destaque: true, vendidos: 389, parcelas: '2x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=400&h=400&fit=crop&q=80' },
+        { id: 14, nome: 'Batom Rosa Choque', preco: 10.00, precoAntigo: 20.00, categoria: 'Maquiagem', destaque: true, vendidos: 312, parcelas: '2x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400&h=400&fit=crop&q=80&sat=10' },
+        { id: 15, nome: 'Batom Nude Perfeito', preco: 10.00, precoAntigo: 20.00, categoria: 'Maquiagem', destaque: true, vendidos: 298, parcelas: '2x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=400&h=400&fit=crop&q=80&sat=11' },
+        { id: 16, nome: 'Batom Vinho Escuro', preco: 10.00, precoAntigo: 20.00, categoria: 'Maquiagem', destaque: true, vendidos: 245, parcelas: '2x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=400&h=400&fit=crop&q=80&sat=12' },
+        { id: 17, nome: 'Batom Laranja Coral', preco: 10.00, precoAntigo: 20.00, categoria: 'Maquiagem', destaque: true, vendidos: 232, parcelas: '2x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400&h=400&fit=crop&q=80&sat=13' },
+        { id: 18, nome: 'Batom Cereja', preco: 10.00, precoAntigo: 20.00, categoria: 'Maquiagem', destaque: true, vendidos: 218, parcelas: '2x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=400&h=400&fit=crop&q=80&sat=14' },
+        { id: 19, nome: 'Batom Amarelado', preco: 10.00, precoAntigo: null, categoria: 'Maquiagem', destaque: false, vendidos: 87, parcelas: '2x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=400&h=400&fit=crop&q=80&sat=15' },
+        { id: 20, nome: 'Batom Chocolatte', preco: 10.00, precoAntigo: null, categoria: 'Maquiagem', destaque: false, vendidos: 156, parcelas: '2x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400&h=400&fit=crop&q=80&sat=16' },
+        { id: 21, nome: 'Batom Rosa Intenso', preco: 10.00, precoAntigo: null, categoria: 'Maquiagem', destaque: false, vendidos: 178, parcelas: '2x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=400&h=400&fit=crop&q=80&sat=17' },
+        { id: 22, nome: 'Batom Glossy Pink', preco: 10.00, precoAntigo: null, categoria: 'Maquiagem', destaque: false, vendidos: 145, parcelas: '2x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=400&h=400&fit=crop&q=80&sat=18' },
+        { id: 23, nome: 'Gloss Diamond', preco: 10.00, precoAntigo: 20.00, categoria: 'Maquiagem', destaque: true, vendidos: 412, parcelas: '2x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&h=400&fit=crop&q=80' },
+        { id: 24, nome: 'Gloss Cintilante', preco: 10.00, precoAntigo: 20.00, categoria: 'Maquiagem', destaque: true, vendidos: 367, parcelas: '2x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?w=400&h=400&fit=crop&q=80' },
+        { id: 25, nome: 'Gloss Vermelho Intenso', preco: 10.00, precoAntigo: null, categoria: 'Maquiagem', destaque: false, vendidos: 234, parcelas: '2x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&h=400&fit=crop&q=80&sat=20' },
+        { id: 26, nome: 'Gloss Dourado', preco: 10.00, precoAntigo: null, categoria: 'Maquiagem', destaque: false, vendidos: 187, parcelas: '2x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?w=400&h=400&fit=crop&q=80&sat=21' },
+        { id: 27, nome: 'Gloss Lilás', preco: 10.00, precoAntigo: null, categoria: 'Maquiagem', destaque: false, vendidos: 165, parcelas: '2x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&h=400&fit=crop&q=80&sat=22' },
+        { id: 28, nome: 'Gloss Pink', preco: 10.00, precoAntigo: null, categoria: 'Maquiagem', destaque: false, vendidos: 198, parcelas: '2x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?w=400&h=400&fit=crop&q=80&sat=23' },
+        { id: 29, nome: 'Gloss Transparente', preco: 10.00, precoAntigo: null, categoria: 'Maquiagem', destaque: false, vendidos: 156, parcelas: '2x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&h=400&fit=crop&q=80&sat=24' },
+        { id: 30, nome: 'Gloss Black', preco: 10.00, precoAntigo: null, categoria: 'Maquiagem', destaque: false, vendidos: 123, parcelas: '2x de R$ 5,00 sem juros', imagem: 'https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?w=400&h=400&fit=crop&q=80&sat=25' }
+    ];
+
+    let imagemAtual = null;
+    let produtosCache = [];
+    let clientesCache = [];
+    let agendamentosCache = [];
+    let clientesConhecidos = new Set();
+    let agendamentosConhecidos = new Set();
+    let primeiraCargaClientes = true;
+    let primeiraCargaAgend = true;
+    let filtroStatusAgend = 'todos';
+    let filtroPeriodoAgend = 'todos';
+
+    const storage = {
+        get(key) {
+            try { return JSON.parse(localStorage.getItem(key)) || []; }
+            catch { return []; }
+        },
+        set(key, val) {
+            try { localStorage.setItem(key, JSON.stringify(val)); return true; }
+            catch {
+                toast('⚠️ Armazenamento cheio!', 'Reduza imagens ou remova itens antigos.');
+                return false;
+            }
+        }
+    };
+
+    const getProdutos = () => storage.get(STORAGE_KEYS.produtos);
+    const setProdutos = (v) => storage.set(STORAGE_KEYS.produtos, v);
+    const getAvaliacoes = () => storage.get(STORAGE_KEYS.avaliacoes);
+    const setAvaliacoes = (v) => storage.set(STORAGE_KEYS.avaliacoes, v);
+    const getFeedbacks = () => storage.get(STORAGE_KEYS.feedbacks);
+    const setFeedbacks = (v) => storage.set(STORAGE_KEYS.feedbacks, v);
+    const getFavoritos = () => storage.get(STORAGE_KEYS.favoritos);
+    const getClientes = () => storage.get(STORAGE_KEYS.clientes);
+    const setClientes = (v) => storage.set(STORAGE_KEYS.clientes, v);
+    const getAgendamentos = () => storage.get(STORAGE_KEYS.agendamentos);
+    const setAgendamentos = (v) => storage.set(STORAGE_KEYS.agendamentos, v);
+
+    function resolverImagem(src) {
+        if (!src) return '../placeholder.jpg';
+        const s = String(src).trim();
+        if (s.startsWith('data:') || s.startsWith('http') || s.startsWith('blob:') || s.startsWith('/')) return s;
+        return '../' + s;
+    }
+
+    function estaOnline(cliente) {
+        if (!cliente?.ultimoAcesso) return false;
+        return (Date.now() - new Date(cliente.ultimoAcesso).getTime()) < TEMPO_ONLINE_MS;
+    }
+
+    function iniciais(nome) {
+        if (!nome) return '?';
+        return nome.trim().split(/\s+/).slice(0, 2).map(n => n[0]).join('').toUpperCase();
+    }
+
+    function formatarDataHora(iso) {
+        if (!iso) return '—';
+        try {
+            const d = new Date(iso);
+            const dia = String(d.getDate()).padStart(2, '0');
+            const mes = String(d.getMonth() + 1).padStart(2, '0');
+            const ano = d.getFullYear();
+            const hora = String(d.getHours()).padStart(2, '0');
+            const min = String(d.getMinutes()).padStart(2, '0');
+            return `${dia}/${mes}/${ano} às ${hora}:${min}`;
+        } catch { return '—'; }
+    }
+
+    function formatarDataBR(dataISO) {
+        if (!dataISO) return '—';
+        const p = String(dataISO).split('-');
+        if (p.length !== 3) return dataISO;
+        return `${p[2]}/${p[1]}/${p[0]}`;
+    }
+
+    function hojeISO() {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function formatarValor(v) {
+        if (v == null || v === '') return '';
+        const n = Number(v);
+        if (isNaN(n)) return '';
+        return `R$ ${n.toFixed(2).replace('.', ',')}`;
+    }
+
+    function initDados() {
+        const seedKey = 'tcbeauty_produtos_seed';
+        if (localStorage.getItem(seedKey) !== PRODUTOS_SEED_VERSION) {
+            setProdutos(PRODUTOS_INICIAIS);
+            localStorage.setItem(seedKey, PRODUTOS_SEED_VERSION);
+        } else if (getProdutos().length === 0) {
+            setProdutos(PRODUTOS_INICIAIS);
+        }
+
+        if (getAvaliacoes().length === 0) {
+            setAvaliacoes([
+                { nome: 'Maria Silva', produto: 'Base Matte Premium', nota: 5, texto: 'Produto maravilhoso! Minha pele ficou perfeita.', data: '10/01/2026', curtidas: 12 },
+                { nome: 'Fernanda Lima', produto: 'Batom Matte Luxo', nota: 5, texto: 'Amei a cor e a durabilidade. Super recomendo!', data: '08/01/2026', curtidas: 8 },
+                { nome: 'Camila Rocha', produto: 'Gloss Diamond', nota: 4, texto: 'Muito bonito, brilho incrível.', data: '05/01/2026', curtidas: 4 },
+                { nome: 'Ana Paula', produto: 'Base Iluminadora', nota: 5, texto: 'Cobertura perfeita e iluminada.', data: '03/01/2026', curtidas: 15 }
+            ]);
+        }
+
+        if (getFeedbacks().length === 0) {
+            setFeedbacks([
+                { nome: 'Cliente 1', texto: 'Loja incrível, produtos de qualidade e entrega rápida!' },
+                { nome: 'Cliente 2', texto: 'Atendimento excelente, tirei todas minhas dúvidas.' }
+            ]);
+        }
+
+        if (getAgendamentos().length === 0 && !localStorage.getItem('tcbeauty_agend_seed')) {
+            const hoje = hojeISO();
+            setAgendamentos([
+                { id: 'ag1', clienteNome: 'Maria Silva', clienteTelefone: '(11) 98765-4321', clienteFoto: '',
+                  servico: 'Maquiagem para Festa', profissional: 'Luíza',
+                  data: hoje, hora: '14:00', valor: 150, status: 'pendente',
+                  observacoes: 'Cliente quer maquiagem iluminada.', criadoEm: new Date().toISOString() },
+                { id: 'ag2', clienteNome: 'Fernanda Lima', clienteTelefone: '(21) 99123-4567', clienteFoto: '',
+                  servico: 'Design de Sobrancelhas', profissional: 'Luíza',
+                  data: hoje, hora: '16:30', valor: 60, status: 'confirmado',
+                  observacoes: '', criadoEm: new Date().toISOString() }
+            ]);
+            localStorage.setItem('tcbeauty_agend_seed', '1');
+        }
+    }
+
+    function fazerLogin() {
+        const usuario = document.getElementById('loginUsuario').value.trim();
+        const senha = document.getElementById('loginSenha').value.trim();
+        const erro = document.getElementById('loginErro');
+
+        if (usuario === CREDENCIAIS.usuario && senha === CREDENCIAIS.senha) {
+            erro.style.display = 'none';
+            document.getElementById('telaLogin').style.display = 'none';
+            document.getElementById('painel').style.display = 'block';
+            document.getElementById('usuarioNome').textContent = 'Luíza';
+            carregarDados();
+            iniciarMonitor();
+            toast('🔐 Bem-vinda!', 'Você entrou no Painel Administrativo.');
+        } else {
+            erro.style.display = 'block';
+            toast('❌ Acesso negado!', 'Usuário ou senha incorretos.');
+        }
+    }
+
+    function sair() {
+        document.getElementById('painel').style.display = 'none';
+        document.getElementById('telaLogin').style.display = 'flex';
+        document.getElementById('loginUsuario').value = 'luiza';
+        document.getElementById('loginSenha').value = '123456';
+        document.getElementById('loginErro').style.display = 'none';
+        pararMonitor();
+        toast('👋 Até logo!', 'Você saiu do painel administrativo.');
+    }
+
+    function carregarDados() {
+        carregarProdutos();
+        carregarAgendamentos();
+        carregarClientes();
+        carregarAvaliacoesAdmin();
+        carregarFeedbacksAdmin();
+        atualizarStats();
+    }
+
+    function carregarProdutos() {
+        produtosCache = getProdutos();
+        document.getElementById('produtosBadge').textContent = produtosCache.length;
+        renderizarTabelaProdutos(produtosCache);
+    }
+
+    function renderizarTabelaProdutos(lista) {
+        const tbody = document.getElementById('tabelaProdutos');
+        if (!lista.length) {
+            tbody.innerHTML = `
+                <tr><td colspan="5" class="vazio">
+                    <i class="fa-regular fa-box"></i>
+                    Nenhum produto encontrado.<br>
+                    <span style="font-size:12px;color:#555;">
+                        ${produtosCache.length ? 'Tente outra busca.' : 'Clique em "Novo Produto".'}
+                    </span>
+                </td></tr>`;
+            return;
+        }
+        tbody.innerHTML = lista.map(p => {
+            const src = resolverImagem(p.imagem);
+            const precoFmt = `R$ ${Number(p.preco).toFixed(2).replace('.', ',')}`;
+            const antigoFmt = p.precoAntigo ? `<span class="produto-preco-antigo">R$ ${Number(p.precoAntigo).toFixed(2).replace('.', ',')}</span>` : '';
+            return `
+                <tr>
+                    <td><img src="${src}" alt="${escaparHTML(p.nome)}" class="produto-img" onerror="this.onerror=null;this.src='../placeholder.jpg'" /></td>
+                    <td>
+                        <div class="produto-nome">${escaparHTML(p.nome)}</div>
+                        ${p.parcelas ? `<div class="produto-parcelas">${escaparHTML(p.parcelas)}</div>` : ''}
+                    </td>
+                    <td><span class="produto-categoria">${escaparHTML(p.categoria)}</span></td>
+                    <td><span class="produto-preco">${precoFmt}</span>${antigoFmt}</td>
+                    <td>
+                        <div class="acoes">
+                            <button class="btn-editar" onclick="editarProduto(${p.id})" title="Editar">
+                                <i class="fa-regular fa-pen"></i>
+                            </button>
+                            <button class="btn-excluir" onclick="excluirProduto(${p.id})" title="Excluir">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>`;
+        }).join('');
+    }
+
+    function filtrarProdutos() {
+        const termo = document.getElementById('buscaProduto').value.trim().toLowerCase();
+        if (!termo) { renderizarTabelaProdutos(produtosCache); return; }
+        const filtrados = produtosCache.filter(p =>
+            p.nome.toLowerCase().includes(termo) || p.categoria.toLowerCase().includes(termo)
+        );
+        renderizarTabelaProdutos(filtrados);
+    }
+
+    function abrirFormProduto(produto = null) {
+        const form = document.getElementById('formProduto');
+        const titulo = document.getElementById('formProdutoTitulo');
+        limparImagem();
+        document.getElementById('buscaProduto').value = '';
+
+        if (produto) {
+            titulo.textContent = '✏️ Editar Produto';
+            document.getElementById('produtoEditId').value = produto.id;
+            document.getElementById('produtoNome').value = produto.nome;
+            document.getElementById('produtoPreco').value = produto.preco;
+            document.getElementById('produtoPrecoAntigo').value = produto.precoAntigo ?? '';
+            document.getElementById('produtoCategoria').value = produto.categoria;
+            document.getElementById('produtoParcelas').value = produto.parcelas || '';
+            document.getElementById('produtoDestaque').value = produto.destaque ? 'true' : 'false';
+            document.getElementById('produtoVendidos').value = produto.vendidos || 0;
+            const img = produto.imagem || '';
+            if (img.startsWith('data:')) {
+                imagemAtual = img;
+                document.getElementById('produtoImagem').placeholder = 'Imagem enviada do dispositivo ✓';
+            } else {
+                document.getElementById('produtoImagem').value = img;
+            }
+            atualizarPreview(img);
+        } else {
+            titulo.textContent = '📦 Adicionar Produto';
+            document.getElementById('produtoEditId').value = '';
+            document.getElementById('produtoNome').value = '';
+            document.getElementById('produtoPreco').value = '';
+            document.getElementById('produtoPrecoAntigo').value = '';
+            document.getElementById('produtoCategoria').value = 'Maquiagem';
+            document.getElementById('produtoParcelas').value = '';
+            document.getElementById('produtoDestaque').value = 'true';
+            document.getElementById('produtoVendidos').value = '0';
+        }
+
+        form.classList.add('aberto');
+        setTimeout(() => form.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    }
+
+    function fecharFormProduto() {
+        document.getElementById('formProduto').classList.remove('aberto');
+        limparImagem();
+    }
+
+    function uploadImagemLocal(event) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+            toast('⚠️ Arquivo inválido', 'Selecione uma imagem (JPG, PNG, WEBP...).');
+            event.target.value = '';
+            return;
+        }
+        if (file.size > TAMANHO_MAX_IMG) {
+            toast('⚠️ Imagem muito grande', 'Escolha uma imagem com até 900KB.');
+            event.target.value = '';
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imagemAtual = e.target.result;
+            document.getElementById('produtoImagem').value = '';
+            document.getElementById('produtoImagem').placeholder = 'Imagem enviada do dispositivo ✓';
+            atualizarPreview(imagemAtual);
+            toast('🖼️ Imagem carregada!', 'A pré-visualização está pronta.');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function onUrlImagemChange() {
+        const url = document.getElementById('produtoImagem').value.trim();
+        imagemAtual = null;
+        atualizarPreview(url);
+    }
+
+    function atualizarPreview(src) {
+        const preview = document.getElementById('imagemPreview');
+        const real = src || imagemAtual;
+        if (real) {
+            preview.classList.add('tem-imagem');
+            preview.innerHTML = `<img src="${resolverImagem(real)}" alt="Preview" onerror="this.onerror=null;this.parentElement.classList.remove('tem-imagem');this.parentElement.innerHTML='<i class=\\'fa-regular fa-image\\'></i>';" />`;
+        } else {
+            preview.classList.remove('tem-imagem');
+            preview.innerHTML = `<i class="fa-regular fa-image"></i>`;
+        }
+    }
+
+    function limparImagem() {
+        imagemAtual = null;
+        const fileInput = document.getElementById('produtoImagemFile');
+        const urlInput = document.getElementById('produtoImagem');
+        if (fileInput) fileInput.value = '';
+        if (urlInput) {
+            urlInput.value = '';
+            urlInput.placeholder = 'Cole a URL ou o nome do arquivo (ex: batom.jpg)';
+        }
+        atualizarPreview('');
+    }
+
+    function salvarProduto() {
+        const id = document.getElementById('produtoEditId').value;
+        const nome = document.getElementById('produtoNome').value.trim();
+        const precoRaw = document.getElementById('produtoPreco').value;
+        const precoAntigoRaw = document.getElementById('produtoPrecoAntigo').value;
+        const categoria = document.getElementById('produtoCategoria').value;
+        const parcelas = document.getElementById('produtoParcelas').value.trim();
+        const destaque = document.getElementById('produtoDestaque').value === 'true';
+        const vendidos = parseInt(document.getElementById('produtoVendidos').value) || 0;
+        const urlDigitada = document.getElementById('produtoImagem').value.trim();
+        const imagem = imagemAtual || urlDigitada;
+
+        if (!nome) { toast('⚠️ Atenção!', 'Informe o nome do produto.'); return; }
+        const preco = parseFloat(precoRaw);
+        if (!precoRaw || isNaN(preco) || preco <= 0) { toast('⚠️ Atenção!', 'Informe um preço válido.'); return; }
+        if (!imagem) { toast('⚠️ Atenção!', 'Adicione uma imagem ao produto.'); return; }
+
+        const precoAntigo = precoAntigoRaw ? parseFloat(precoAntigoRaw) : null;
+        const produtos = getProdutos();
+
+        if (id) {
+            const idx = produtos.findIndex(p => p.id === parseInt(id));
+            if (idx === -1) { toast('❌ Erro', 'Produto não encontrado.'); return; }
+            produtos[idx] = { ...produtos[idx], nome, preco, precoAntigo, categoria, parcelas, imagem, destaque, vendidos };
+            if (!setProdutos(produtos)) return;
+            toast('✅ Produto atualizado!', `"${nome}" foi atualizado.`);
+        } else {
+            const novoId = produtos.length ? Math.max(...produtos.map(p => p.id)) + 1 : 1;
+            produtos.push({ id: novoId, nome, preco, precoAntigo, categoria, parcelas, imagem, destaque, vendidos });
+            if (!setProdutos(produtos)) return;
+            toast('✅ Produto adicionado!', `"${nome}" foi cadastrado.`);
+        }
+
+        fecharFormProduto();
+        carregarProdutos();
+        atualizarStats();
+    }
+
+    function editarProduto(id) {
+        const produto = getProdutos().find(p => p.id === id);
+        if (produto) abrirFormProduto(produto);
+    }
+
+    function excluirProduto(id) {
+        const produto = getProdutos().find(p => p.id === id);
+        if (!produto) return;
+        if (!confirm(`Excluir "${produto.nome}"?`)) return;
+        setProdutos(getProdutos().filter(p => p.id !== id));
+        carregarProdutos();
+        atualizarStats();
+        toast('🗑️ Produto excluído!', `"${produto.nome}" foi removido.`);
+    }
+
+    function carregarAgendamentos() {
+        agendamentosCache = getAgendamentos();
+        atualizarContadoresAgend();
+        renderizarAgendamentos();
+    }
+
+    function atualizarContadoresAgend() {
+        const all = agendamentosCache;
+        const hoje = hojeISO();
+        const contar = (status) => all.filter(a => a.status === status).length;
+
+        document.getElementById('agendBadge').textContent = all.length;
+        document.getElementById('agendPendentesBadge').textContent = `${contar('pendente')} pendentes`;
+        document.getElementById('cont-todos').textContent = all.length;
+        document.getElementById('cont-pendente').textContent = contar('pendente');
+        document.getElementById('cont-confirmado').textContent = contar('confirmado');
+        document.getElementById('cont-concluido').textContent = contar('concluido');
+        document.getElementById('cont-cancelado').textContent = contar('cancelado');
+
+        document.getElementById('statAgendHoje').textContent = all.filter(a => a.data === hoje && a.status !== 'cancelado').length;
+        document.getElementById('statAgendPendentes').textContent = contar('pendente');
+    }
+
+    function setFiltroAgend(status, btn) {
+        filtroStatusAgend = status;
+        document.querySelectorAll('#agendFiltrosStatus .filtro-chip').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        renderizarAgendamentos();
+    }
+
+    function setPeriodoAgend(periodo, btn) {
+        filtroPeriodoAgend = periodo;
+        document.querySelectorAll('#agendFiltrosData .filtro-chip').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        renderizarAgendamentos();
+    }
+
+    function filtrarPorPeriodo(lista) {
+        const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+        const hojeIso = hojeISO();
+        if (filtroPeriodoAgend === 'hoje') return lista.filter(a => a.data === hojeIso);
+        if (filtroPeriodoAgend === 'semana') {
+            const limite = new Date(hoje); limite.setDate(limite.getDate() + 7);
+            return lista.filter(a => {
+                if (!a.data) return false;
+                const d = new Date(a.data + 'T00:00:00');
+                return d >= hoje && d <= limite;
+            });
+        }
+        if (filtroPeriodoAgend === 'passado') return lista.filter(a => a.data < hojeIso);
+        return lista;
+    }
+
+    function renderizarAgendamentos() {
+        const container = document.getElementById('listaAgendamentos');
+        let lista = agendamentosCache;
+        if (filtroStatusAgend !== 'todos') lista = lista.filter(a => a.status === filtroStatusAgend);
+        lista = filtrarPorPeriodo(lista);
+        lista = [...lista].sort((a, b) => {
+            const da = `${a.data || ''}T${a.hora || '00:00'}`;
+            const db = `${b.data || ''}T${b.hora || '00:00'}`;
+            return da.localeCompare(db);
+        });
+
+        if (!lista.length) {
+            container.innerHTML = `
+                <div class="vazio" style="grid-column: 1/-1;">
+                    <i class="fa-regular fa-calendar"></i>
+                    ${agendamentosCache.length ? 'Nenhum agendamento com esses filtros.' : 'Nenhum agendamento ainda.<br><span style="font-size:12px;color:#555;">Quando um cliente agendar na loja, aparecerá aqui.</span>'}
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = lista.map(a => {
+            const statusLabel = { pendente: 'Pendente', confirmado: 'Confirmado', concluido: 'Concluído', cancelado: 'Cancelado' };
+            const statusIcon = { pendente: 'fa-hourglass-half', confirmado: 'fa-circle-check', concluido: 'fa-circle-check', cancelado: 'fa-circle-xmark' };
+            const avatar = a.clienteFoto
+                ? `<img src="${resolverImagem(a.clienteFoto)}" alt="${escaparHTML(a.clienteNome)}" onerror="this.parentElement.innerHTML='${iniciais(a.clienteNome)}';" />`
+                : iniciais(a.clienteNome);
+
+            let acoes = '';
+            if (a.status === 'pendente') {
+                acoes = `
+                    <button class="btn-confirmar" onclick="mudarStatusAgend('${escaparHTML(a.id)}', 'confirmado')">
+                        <i class="fa-solid fa-check"></i> Confirmar
+                    </button>
+                    <button class="btn-cancelar-ag" onclick="mudarStatusAgend('${escaparHTML(a.id)}', 'cancelado')">
+                        <i class="fa-solid fa-xmark"></i> Cancelar
+                    </button>`;
+            } else if (a.status === 'confirmado') {
+                acoes = `
+                    <button class="btn-concluir" onclick="mudarStatusAgend('${escaparHTML(a.id)}', 'concluido')">
+                        <i class="fa-solid fa-flag-checkered"></i> Concluir
+                    </button>
+                    <button class="btn-cancelar-ag" onclick="mudarStatusAgend('${escaparHTML(a.id)}', 'cancelado')">
+                        <i class="fa-solid fa-xmark"></i> Cancelar
+                    </button>`;
+            } else if (a.status === 'concluido') {
+                acoes = `<button onclick="excluirAgendamento('${escaparHTML(a.id)}')" class="btn-excluir-ag">
+                        <i class="fa-regular fa-trash-can"></i> Remover
+                    </button>`;
+            } else {
+                acoes = `
+                    <button onclick="mudarStatusAgend('${escaparHTML(a.id)}', 'pendente')">
+                        <i class="fa-solid fa-rotate-left"></i> Reabrir
+                    </button>
+                    <button onclick="excluirAgendamento('${escaparHTML(a.id)}')" class="btn-excluir-ag">
+                        <i class="fa-regular fa-trash-can"></i> Excluir
+                    </button>`;
+            }
+
+            return `
+                <div class="agend-card status-${a.status}">
+                    <div class="agend-header">
+                        <div class="agend-cliente">
+                            <div class="agend-avatar">${avatar}</div>
+                            <div style="min-width:0;">
+                                <div class="nome">${escaparHTML(a.clienteNome || 'Cliente')}</div>
+                                ${a.clienteTelefone ? `<div class="tel"><i class="fa-solid fa-phone" style="font-size:10px;"></i> ${escaparHTML(a.clienteTelefone)}</div>` : ''}
+                            </div>
+                        </div>
+                        <span class="status-badge ${a.status}">
+                            <i class="fa-regular ${statusIcon[a.status]}"></i>
+                            ${statusLabel[a.status] || a.status}
+                        </span>
+                    </div>
+
+                    <div class="agend-detalhes">
+                        <div class="agend-detalhe">
+                            <i class="fa-regular fa-calendar"></i>
+                            <span><strong>${formatarDataBR(a.data)}</strong></span>
+                        </div>
+                        <div class="agend-detalhe">
+                            <i class="fa-regular fa-clock"></i>
+                            <span><strong>${escaparHTML(a.hora || '--:--')}</strong></span>
+                        </div>
+                        <div class="agend-detalhe">
+                            <i class="fa-regular fa-sparkles"></i>
+                            <span>${escaparHTML(a.servico || 'Serviço')}</span>
+                        </div>
+                        ${a.profissional ? `<div class="agend-detalhe"><i class="fa-regular fa-user-tie"></i><span>${escaparHTML(a.profissional)}</span></div>` : ''}
+                        ${a.valor ? `<div class="agend-detalhe"><i class="fa-solid fa-tag"></i><span>${formatarValor(a.valor)}</span></div>` : ''}
+                        <div class="agend-detalhe">
+                            <i class="fa-regular fa-calendar-plus"></i>
+                            <span style="font-size:11px;color:#666;">Criado ${formatarDataHora(a.criadoEm)}</span>
+                        </div>
+                    </div>
+
+                    ${a.observacoes ? `<div class="agend-obs"><i class="fa-regular fa-note-sticky"></i> ${escaparHTML(a.observacoes)}</div>` : ''}
+
+                    <div class="agend-acoes">${acoes}</div>
+                </div>`;
+        }).join('');
+    }
+
+    function mudarStatusAgend(id, novoStatus) {
+        const lista = getAgendamentos();
+        const idx = lista.findIndex(a => String(a.id) === String(id));
+        if (idx === -1) return;
+        lista[idx].status = novoStatus;
+        lista[idx].atualizadoEm = new Date().toISOString();
+        if (!setAgendamentos(lista)) return;
+        carregarAgendamentos();
+        atualizarStats();
+        const label = { confirmado: 'confirmado', concluido: 'concluído', cancelado: 'cancelado', pendente: 'reaberto' };
+        toast('✅ Status atualizado!', `Agendamento ${label[novoStatus] || novoStatus}.`);
+    }
+
+    function excluirAgendamento(id) {
+        const a = getAgendamentos().find(x => String(x.id) === String(id));
+        if (!a) return;
+        if (!confirm(`Excluir o agendamento de "${a.clienteNome}"?`)) return;
+        setAgendamentos(getAgendamentos().filter(x => String(x.id) !== String(id)));
+        carregarAgendamentos();
+        atualizarStats();
+        toast('🗑️ Agendamento excluído', `O agendamento de "${a.clienteNome}" foi removido.`);
+    }
+
+    function limparAgendamentos(status) {
+        const alvo = getAgendamentos().filter(a => a.status === status);
+        if (!alvo.length) { toast('ℹ️ Nada para limpar', `Não há agendamentos com status "${status}".`); return; }
+        if (!confirm(`Excluir TODOS os ${alvo.length} agendamentos com status "${status}"?`)) return;
+        setAgendamentos(getAgendamentos().filter(a => a.status !== status));
+        carregarAgendamentos();
+        atualizarStats();
+        toast('🧹 Lista limpa!', `${alvo.length} agendamentos removidos.`);
+    }
+
+    function carregarClientes() {
+        clientesCache = getClientes();
+        atualizarBadgesClientes();
+        renderizarClientes();
+    }
+
+    function atualizarBadgesClientes() {
+        const total = clientesCache.length;
+        const online = clientesCache.filter(estaOnline).length;
+        document.getElementById('clientesBadge').textContent = total;
+        document.getElementById('clientesOnlineBadge').textContent = `${online} online`;
+        document.getElementById('statClientes').textContent = total;
+        document.getElementById('statOnline').textContent = online;
+    }
+
+    function renderizarClientes() {
+        const container = document.getElementById('listaClientes');
+        const termo = (document.getElementById('buscaCliente')?.value || '').trim().toLowerCase();
+
+        const ordenados = [...clientesCache].sort((a, b) => {
+            const aOn = estaOnline(a), bOn = estaOnline(b);
+            if (aOn !== bOn) return bOn - aOn;
+            return new Date(b.ultimoAcesso || 0) - new Date(a.ultimoAcesso || 0);
+        });
+
+        const lista = termo
+            ? ordenados.filter(c =>
+                (c.nome || '').toLowerCase().includes(termo) ||
+                (c.email || '').toLowerCase().includes(termo) ||
+                (c.telefone || '').toLowerCase().includes(termo))
+            : ordenados;
+
+        if (!lista.length) {
+            container.innerHTML = `
+                <div class="vazio" style="grid-column: 1 / -1;">
+                    <i class="fa-regular fa-users"></i>
+                    ${clientesCache.length ? 'Nenhum cliente corresponde à busca.' : 'Nenhum cliente logou ainda.<br><span style="font-size:12px;color:#555;">Assim que alguém entrar na loja, aparecerá aqui.</span>'}
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = lista.map(c => {
+            const online = estaOnline(c);
+            const avatar = c.foto
+                ? `<img src="${resolverImagem(c.foto)}" alt="${escaparHTML(c.nome || '')}" onerror="this.parentElement.innerHTML='${iniciais(c.nome)}';" />`
+                : iniciais(c.nome);
+
+            return `
+                <div class="cliente-card ${online ? 'online' : ''}">
+                    <div class="cliente-avatar">
+                        ${avatar}
+                        ${online ? '<span class="status-online" title="Online"></span>' : ''}
+                    </div>
+                    <div class="cliente-info">
+                        <div class="nome">
+                            ${escaparHTML(c.nome || 'Sem nome')}
+                            ${online ? '<span class="badge-online">● ONLINE</span>' : ''}
+                        </div>
+                        ${c.email ? `<div class="linha"><i class="fa-regular fa-envelope"></i><span class="valor">${escaparHTML(c.email)}</span></div>` : ''}
+                        ${c.telefone ? `<div class="linha"><i class="fa-solid fa-phone"></i><span class="valor">${escaparHTML(c.telefone)}</span></div>` : ''}
+                        ${c.cidade ? `<div class="linha"><i class="fa-solid fa-location-dot"></i><span class="valor">${escaparHTML(c.cidade)}</span></div>` : ''}
+                        <div class="linha">
+                            <i class="fa-regular fa-clock"></i>
+                            <span class="valor" title="Último acesso">
+                                ${online ? 'Entrou ' : 'Entrou em '} ${formatarDataHora(c.ultimoAcesso || c.dataLogin)}
+                            </span>
+                        </div>
+                    </div>
+                    <button class="btn-remover-cliente" title="Remover cliente"
+                            onclick="removerCliente('${escaparHTML(c.id)}')">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
+                </div>`;
+        }).join('');
+    }
+
+    function filtrarClientes() { renderizarClientes(); }
+
+    function removerCliente(id) {
+        const c = getClientes().find(x => String(x.id) === String(id));
+        if (!c) return;
+        if (!confirm(`Remover "${c.nome}" da lista?`)) return;
+        setClientes(getClientes().filter(x => String(x.id) !== String(id)));
+        carregarClientes();
+        atualizarStats();
+        toast('🗑️ Cliente removido', `"${c.nome}" foi removido da lista.`);
+    }
+
+    function limparClientes() {
+        if (!getClientes().length) { toast('ℹ️ Lista vazia', 'Não há clientes para remover.'); return; }
+        if (!confirm('Remover TODOS os clientes da lista?')) return;
+        setClientes([]);
+        carregarClientes();
+        atualizarStats();
+        toast('🧹 Lista limpa!', 'Todos os clientes foram removidos da lista.');
+    }
+
+    let pollingTimer = null;
+
+    function iniciarMonitor() {
+        window.addEventListener('storage', onStorageChange);
+        if (pollingTimer) clearInterval(pollingTimer);
+        pollingTimer = setInterval(verificarNovidades, 2000);
+
+        setInterval(() => {
+            const antes = clientesCache.filter(estaOnline).length;
+            atualizarBadgesClientes();
+            const depois = clientesCache.filter(estaOnline).length;
+            if (antes !== depois && document.getElementById('sec-clientes').classList.contains('active')) {
+                renderizarClientes();
+            }
+        }, 30000);
+    }
+
+    function pararMonitor() {
+        window.removeEventListener('storage', onStorageChange);
+        if (pollingTimer) { clearInterval(pollingTimer); pollingTimer = null; }
+    }
+
+    function onStorageChange(e) {
+        if (e.key === STORAGE_KEYS.clientes) verificarNovidades();
+        if (e.key === STORAGE_KEYS.agendamentos) verificarNovidades();
+    }
+
+    function verificarNovidades() {
+        verificarNovosClientes();
+        verificarNovosAgendamentos();
+    }
+
+    function verificarNovosClientes() {
+        const atuais = getClientes();
+        if (primeiraCargaClientes) {
+            clientesConhecidos = new Set(atuais.map(c => String(c.id)));
+            primeiraCargaClientes = false;
+            clientesCache = atuais;
+            atualizarBadgesClientes();
+            if (document.getElementById('sec-clientes').classList.contains('active')) renderizarClientes();
+            return;
+        }
+        const novos = atuais.filter(c => !clientesConhecidos.has(String(c.id)));
+        if (novos.length > 0) {
+            novos.forEach(c => clientesConhecidos.add(String(c.id)));
+            const n = novos[0];
+            toast('🔔 Novo cliente logado!', `${n.nome || 'Alguém'} entrou na loja.`);
+            if (!document.getElementById('sec-clientes').classList.contains('active')) {
+                document.getElementById('badgeNovoCliente').style.display = 'block';
+            }
+            clientesCache = atuais;
+            atualizarBadgesClientes();
+            if (document.getElementById('sec-clientes').classList.contains('active')) renderizarClientes();
+        } else {
+            const mudou = JSON.stringify(atuais) !== JSON.stringify(clientesCache);
+            if (mudou) {
+                clientesCache = atuais;
+                atualizarBadgesClientes();
+                if (document.getElementById('sec-clientes').classList.contains('active')) renderizarClientes();
+            }
+        }
+    }
+
+    function verificarNovosAgendamentos() {
+        const atuais = getAgendamentos();
+        if (primeiraCargaAgend) {
+            agendamentosConhecidos = new Set(atuais.map(a => String(a.id)));
+            primeiraCargaAgend = false;
+            agendamentosCache = atuais;
+            atualizarContadoresAgend();
+            if (document.getElementById('sec-agendamentos').classList.contains('active')) renderizarAgendamentos();
+            return;
+        }
+        const novos = atuais.filter(a => !agendamentosConhecidos.has(String(a.id)));
+        if (novos.length > 0) {
+            novos.forEach(a => agendamentosConhecidos.add(String(a.id)));
+            const n = novos[0];
+            toast('📅 Novo agendamento!', `${n.clienteNome} agendou "${n.servico}" para ${formatarDataBR(n.data)} às ${n.hora}.`);
+            if (!document.getElementById('sec-agendamentos').classList.contains('active')) {
+                document.getElementById('badgeNovoAgend').style.display = 'block';
+            }
+            agendamentosCache = atuais;
+            atualizarContadoresAgend();
+            atualizarStats();
+            if (document.getElementById('sec-agendamentos').classList.contains('active')) renderizarAgendamentos();
+        } else {
+            const mudou = JSON.stringify(atuais) !== JSON.stringify(agendamentosCache);
+            if (mudou) {
+                agendamentosCache = atuais;
+                atualizarContadoresAgend();
+                atualizarStats();
+                if (document.getElementById('sec-agendamentos').classList.contains('active')) renderizarAgendamentos();
+            }
+        }
+    }
+
+    function carregarAvaliacoesAdmin() {
+        const avaliacoes = getAvaliacoes();
+        const container = document.getElementById('listaAvaliacoesAdmin');
+        document.getElementById('avaliacoesBadge').textContent = avaliacoes.length;
+        if (!avaliacoes.length) {
+            container.innerHTML = `<div class="vazio"><i class="fa-regular fa-star"></i>Nenhuma avaliação ainda.</div>`;
+            return;
+        }
+        container.innerHTML = avaliacoes.map((a, i) => {
+            const estrelas = '★'.repeat(a.nota) + '☆'.repeat(5 - a.nota);
+            return `
+                <div class="avaliacao-admin-item">
+                    <div class="header">
+                        <span class="nome">${escaparHTML(a.nome)}</span>
+                        <span class="estrelas">${estrelas}</span>
+                        <span class="data">${escaparHTML(a.data || '')}</span>
+                    </div>
+                    <div class="texto"><strong>${escaparHTML(a.produto)}</strong> — ${escaparHTML(a.texto)}</div>
+                    <div class="acoes">
+                        <button class="btn-responder" onclick="responderAvaliacao(${i})">
+                            <i class="fa-regular fa-reply"></i> Responder
+                        </button>
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    function responderAvaliacao(index) {
+        const a = getAvaliacoes()[index];
+        if (!a) return;
+        const resposta = prompt(`Responder avaliação de ${a.nome}:\n"${a.texto}"\n\nDigite sua resposta:`);
+        if (!resposta?.trim()) return;
+        const feedbacks = getFeedbacks();
+        feedbacks.push({ nome: `💬 Luíza (resposta à ${a.nome})`, texto: resposta.trim() });
+        setFeedbacks(feedbacks);
+        carregarFeedbacksAdmin();
+        atualizarStats();
+        toast('📨 Resposta enviada!', 'A resposta foi adicionada aos feedbacks.');
+    }
+
+    function carregarFeedbacksAdmin() {
+        const feedbacks = getFeedbacks();
+        const container = document.getElementById('listaFeedbacksAdmin');
+        document.getElementById('feedbacksBadge').textContent = feedbacks.length;
+        if (!feedbacks.length) {
+            container.innerHTML = `<div class="vazio"><i class="fa-regular fa-comment"></i>Nenhum feedback ainda.</div>`;
+            return;
+        }
+        container.innerHTML = feedbacks.map((f, i) => {
+            const isResposta = f.nome.includes('Luíza') || f.nome.includes('TC Beauty');
+            return `
+                <div class="feedback-admin-item">
+                    <div class="header">
+                        <span class="nome">${escaparHTML(f.nome)}</span>
+                        ${isResposta ? '<span class="badge-resposta">📨 Resposta</span>' : ''}
+                    </div>
+                    <div class="texto">${escaparHTML(f.texto)}</div>
+                    ${!isResposta ? `
+                        <div class="acoes">
+                            <button class="btn-responder" onclick="responderFeedbackAdmin(${i})">
+                                <i class="fa-regular fa-reply"></i> Responder
+                            </button>
+                        </div>` : ''}
+                </div>`;
+        }).join('');
+    }
+
+    function responderFeedbackAdmin(index) {
+        const f = getFeedbacks()[index];
+        if (!f) return;
+        const resposta = prompt(`Responder feedback de ${f.nome}:\n"${f.texto}"\n\nDigite sua resposta:`);
+        if (!resposta?.trim()) return;
+        const feedbacks = getFeedbacks();
+        feedbacks.push({ nome: `💬 Luíza (resposta à ${f.nome})`, texto: resposta.trim() });
+        setFeedbacks(feedbacks);
+        carregarFeedbacksAdmin();
+        toast('📨 Resposta enviada!', 'Sua resposta foi adicionada.');
+    }
+
+    function atualizarStats() {
+        document.getElementById('statProdutos').textContent = getProdutos().length;
+    }
+
+    function abrirSecao(secao, btn) {
+        document.querySelectorAll('.painel-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.painel-nav button').forEach(b => b.classList.remove('active'));
+        document.getElementById('sec-' + secao).classList.add('active');
+        if (btn) btn.classList.add('active');
+
+        if (secao === 'produtos') carregarProdutos();
+        if (secao === 'agendamentos') {
+            carregarAgendamentos();
+            document.getElementById('badgeNovoAgend').style.display = 'none';
+        }
+        if (secao === 'clientes') {
+            carregarClientes();
+            document.getElementById('badgeNovoCliente').style.display = 'none';
+        }
+        if (secao === 'avaliacoes') carregarAvaliacoesAdmin();
+        if (secao === 'feedbacks') carregarFeedbacksAdmin();
+    }
+
+    function escaparHTML(str) {
+        if (str == null) return '';
+        return String(str)
+            .replaceAll('&', '&amp;').replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;').replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
+    }
+
+    function toast(titulo, texto) {
+        const el = document.getElementById('toast');
+        document.getElementById('toastTitulo').textContent = titulo;
+        document.getElementById('toastTexto').textContent = texto;
+        el.classList.add('mostrar');
+        clearTimeout(el._timeout);
+        el._timeout = setTimeout(() => el.classList.remove('mostrar'), 3500);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initDados();
+        document.getElementById('telaLogin').style.display = 'flex';
+        document.getElementById('painel').style.display = 'none';
+        document.getElementById('loginSenha').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') fazerLogin();
+        });
+        console.log('👩‍💼 TC Beauty — Painel ADM pronto com 30 produtos.');
+    });
+
+    Object.assign(window, {
+        fazerLogin, sair, abrirSecao,
+        abrirFormProduto, fecharFormProduto, salvarProduto, editarProduto, excluirProduto,
+        responderAvaliacao, responderFeedbackAdmin,
+        uploadImagemLocal, onUrlImagemChange, limparImagem, filtrarProdutos,
+        filtrarClientes, removerCliente, limparClientes,
+        setFiltroAgend, setPeriodoAgend, mudarStatusAgend, excluirAgendamento, limparAgendamentos,
+        toast
+    });
+    </script>
+
+</body>
+</html>
