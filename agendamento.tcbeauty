@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamento | TC Beauty</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #E91E63;
+            --primary-dark: #C2185B;
+            --secondary-color: #212121;
+            --bg-color: #FAFAFA;
+            --card-bg: #FFFFFF;
+            --text-color: #333333;
+            --text-light: #666666;
+            --gold-detail: #D4AF37;
+            --border-radius: 12px;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            --font-family: 'Montserrat', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: var(--bg-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .header {
+            background: var(--card-bg);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header h1 { font-size: 18px; font-weight: 700; color: var(--secondary-color); }
+        .header a { color: var(--primary-color); text-decoration: none; font-size: 14px; font-weight: 600; }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: var(--card-bg);
+            border-bottom: 1px solid #eee;
+        }
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 10px;
+            color: var(--text-light);
+            width: 25%;
+        }
+        .progress-step.active { color: var(--primary-color); font-weight: 700; }
+        .progress-step .circle {
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            background: #eee;
+            color: #fff;
+            display: flex; justify-content: center; align-items: center;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+        .progress-step.active .circle { background: var(--primary-color); }
+        .progress-step.completed .circle { background: var(--primary-dark); }
+
+        .main-content { padding: 20px; flex: 1; overflow-y: auto; }
+        
+        .step { display: none; animation: fadeIn 0.4s ease; }
+        .step.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .title { font-size: 22px; font-weight: 700; margin-bottom: 8px; color: var(--secondary-color); }
+        .subtitle { font-size: 14px; color: var(--text-light); margin-bottom: 20px; }
+
+        .service-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 18px;
+            margin-bottom: 15px;
+            box-shadow: var(--shadow);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .service-card:hover { transform: translateY(-2px); border-color: var(--primary-color); }
+        .service-card.selected { border-color: var(--primary-color); background: #FFF0F5; }
+        .service-card h3 { font-size: 16px; color: var(--secondary-color); }
+        .service-card p { font-size: 13px; color: var(--text-light); }
+        .service-card .meta { font-size: 12px; font-weight: 600; color: var(--primary-color); }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; color: var(--secondary-color); }
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: var(--font-family);
+            font-size: 14px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        .form-control:focus { border-color: var(--primary-color); }
+        
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 30px;
+            border: none;
+            font-family: var(--font-family);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .btn-primary { background: var(--primary-color); color: #fff; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-secondary { background: transparent; color: var(--primary-color); border: 2px solid var(--primary-color); }
+        .btn-secondary:hover { background: #FFF0F5; }
+        .btn-whatsapp { background: #25D366; color: #fff; margin-top: 10px; }
+        .btn-whatsapp:hover { background: #128C7E; }
+
+        .date-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: var(--font-family);
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        .period-options { display: flex; gap: 10px; margin-bottom: 15px; }
+        .period-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: all 0.3s;
+        }
+        .period-btn.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+
+        .time-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+        .time-btn {
+            padding: 10px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .time-btn:hover { border-color: var(--primary-color); }
+        .time-btn.selected { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+        .time-btn.disabled { background: #f0f0f0; color: #bbb; cursor: not-allowed; border-color: #eee; }
+
+        .success-screen { text-align: center; padding: 40px 20px; }
+        .success-icon { font-size: 60px; margin-bottom: 20px; }
+        .summary-box {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            text-align: left;
+            margin: 20px 0;
+            box-shadow: var(--shadow);
+        }
+        .summary-box p { margin-bottom: 8px; font-size: 14px; }
+        .summary-box strong { color: var(--secondary-color); }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            gap: 10px;
+        }
+        .nav-buttons .btn { width: auto; flex: 1; padding: 12px; font-size: 14px; }
+
+        .demo-warning {
+            background: #FFF3CD;
+            color: #856404;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- HEADER — 🔗 LINK DE VOLTAR AO SITE PRINCIPAL -->
+    <header class="header">
+        <h1>TC Beauty</h1>
+        <a href="index.html">← Voltar ao site</a>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-step active" id="prog-1"><div class="circle">1</div>Serviço</div>
+        <div class="progress-step" id="prog-2"><div class="circle">2</div>Data/Hora</div>
+        <div class="progress-step" id="prog-3"><div class="circle">3</div>Dados</div>
+        <div class="progress-step" id="prog-4"><div class="circle">4</div>Pronto</div>
+    </div>
+
+    <main class="main-content">
+        
+        <!-- TELA 1: SERVIÇO -->
+        <div class="step active" id="step-1">
+            <h2 class="title">Agende seu atendimento</h2>
+            <p class="subtitle">Escolha o serviço, a data e o horário que combinam com você.</p>
+            <div id="services-list"></div>
+        </div>
+
+        <!-- TELA 2: DATA E HORA -->
+        <div class="step" id="step-2">
+            <h2 class="title">Agendamento</h2>
+            <p class="subtitle">Selecione uma data e horário de sua preferência.</p>
+            
+            <div class="form-group">
+                <label>Data:*</label>
+                <input type="date" id="input-date" class="date-input" required>
+            </div>
+
+            <div class="form-group">
+                <label>Selecione um período:</label>
+                <div class="period-options">
+                    <button class="period-btn active" onclick="selectPeriod('manha', this)">Manhã</button>
+                    <button class="period-btn" onclick="selectPeriod('tarde', this)">Tarde</button>
+                    <button class="period-btn" onclick="selectPeriod('noite', this)">Noite</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Horário:*</label>
+                <div class="time-grid" id="time-grid"></div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="goToStep(1)">Voltar</button>
+                <button class="btn btn-primary" onclick="validateStep2()">Continuar</button>
+            </div>
+        </div>
+
+        <!-- TELA 3: DADOS -->
+        <div class="step" id="step-3">
+            <h2 class="title">Quase tudo pronto!</h2>
+            <p class="subtitle">Informe seus dados para confirmar seu agendamento na TC Beauty.</p>
+
+            <form id="client-form" onsubmit="event.preventDefault(); finishBooking();">
+                <div class="form-group">
+                    <label>Nome completo:*</label>
+                    <input type="text" id="input-name" class="form-control" required placeholder="Seu nome">
+                </div>
+                <div class="form-group">
+                    <label>WhatsApp:*</label>
+                    <input type="tel" id="input-whatsapp" class="form-control" required placeholder="(13) 99999-9999">
+                </div>
+                <div class="form-group">
+                    <label>Endereço completo:*</label>
+                    <input type="text" id="input-address" class="form-control" required placeholder="Rua, número, bairro, cidade">
+                </div>
+                <div class="form-group">
+                    <label>E-mail (opcional):</label>
+                    <input type="email" id="input-email" class="form-control" placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Observações (opcional):</label>
+                    <textarea id="input-notes" class="form-control" rows="3" placeholder="Alguma preferência ou alergia?"></textarea>
+                </div>
+
+                <div class="nav-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="goToStep(2)">Voltar</button>
+                    <button type="submit" class="btn btn-primary">Finalizar Agendamento</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- TELA 4: CONFIRMAÇÃO -->
+        <div class="step" id="step-4">
+            <div class="success-screen">
+                <div class="success-icon">✨</div>
+                <h2 class="title">Agendamento realizado!</h2>
+                <p class="subtitle">Seu atendimento na TC Beauty foi agendado com sucesso.</p>
+
+                <div class="summary-box" id="summary-box"></div>
+
+                <p style="font-size: 12px; color: #666; margin-bottom: 15px;">
+                    *Aguarde a confirmação da loja. Entraremos em contato pelo WhatsApp.
+                </p>
+
+                <button class="btn btn-whatsapp" onclick="sendWhatsApp()">📲 Enviar confirmação pelo WhatsApp</button>
+                <!-- 🔗 LINK DE VOLTAR AO SITE PRINCIPAL -->
+                <a href="index.html" class="btn btn-secondary" style="margin-top: 10px;">Voltar para o site</a>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    /* ==========================================
+       CONFIGURAÇÕES DA LOJA
+       ========================================== */
+    const CONFIG = {
+        storeName: "TC Beauty",
+        whatsappNumber: "5513992084636",
+        
+        services: [
+            { id: 1, name: "Maquiagem para Eventos", description: "Produção completa para festas e casamentos.", duration: "60 min", price: "R$ 150,00" },
+            { id: 2, name: "Maquiagem Social", description: "Maquiagem leve e elegante para o dia a dia.", duration: "45 min", price: "R$ 100,00" },
+            { id: 3, name: "Consultoria de Maquiagem", description: "Aprenda a realçar sua beleza com dicas personalizadas.", duration: "30 min", price: "R$ 80,00" },
+            { id: 4, name: "Atendimento Personalizado", description: "Cuidados de beleza exclusivos para você.", duration: "40 min", price: "R$ 120,00" }
+        ],
+        
+        workingHours: {
+            manha: ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30"],
+            tarde: ["13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"],
+            noite: ["18:00", "18:30", "19:00"]
+        },
+        
+        blockedDates: ["2026-12-25", "2027-01-01"] 
+    };
+
+    /* ==========================================
+       ESTADO
+       ========================================== */
+    let currentStep = 1;
+    let bookingData = {
+        service: null,
+        date: "",
+        period: "manha",
+        time: "",
+        clientName: "",
+        clientWhatsapp: "",
+        clientAddress: "",
+        clientEmail: "",
+        clientNotes: ""
+    };
+
+    /* ==========================================
+       NAVEGAÇÃO
+       ========================================== */
+    function goToStep(step) {
+        document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+        document.getElementById(`step-${step}`).classList.add('active');
+        
+        document.querySelectorAll('.progress-step').forEach((el, index) => {
+            el.classList.remove('active', 'completed');
+            if (index + 1 < step) el.classList.add('completed');
+            if (index + 1 === step) el.classList.add('active');
+        });
+        
+        currentStep = step;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ==========================================
+       TELA 1: SERVIÇOS
+       ========================================== */
+    function renderServices() {
+        const container = document.getElementById('services-list');
+        container.innerHTML = '';
+        
+        CONFIG.services.forEach(service => {
+            const card = document.createElement('div');
+            card.className = 'service-card';
+            card.onclick = (ev) => selectService(service, ev);
+            card.innerHTML = `
+                <h3>${service.name}</h3>
+                <p>${service.description}</p>
+                <div class="meta">⏱ ${service.duration} | 💰 ${service.price}</div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function selectService(service, ev) {
+        bookingData.service = service;
+        document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+        if (ev && ev.currentTarget) ev.currentTarget.classList.add('selected');
+        
+        setTimeout(() => {
+            goToStep(2);
+            initDatePicker();
+        }, 300);
+    }
+
+    /* ==========================================
+       TELA 2: DATA E HORA
+       ========================================== */
+    function initDatePicker() {
+        const dateInput = document.getElementById('input-date');
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.min = today;
+        
+        if (!bookingData.date) {
+            dateInput.value = today;
+            bookingData.date = today;
+        }
+
+        dateInput.onchange = (e) => {
+            const selectedDate = e.target.value;
+            if (CONFIG.blockedDates.includes(selectedDate)) {
+                alert("Desculpe, esta data está bloqueada para agendamentos. Por favor, escolha outra data.");
+                dateInput.value = "";
+                bookingData.date = "";
+                return;
+            }
+            bookingData.date = selectedDate;
+            renderTimes();
+        };
+
+        renderTimes();
+    }
+
+    function selectPeriod(period, btn) {
+        document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        bookingData.period = period;
+        renderTimes();
+    }
+
+    function renderTimes() {
+        const grid = document.getElementById('time-grid');
+        grid.innerHTML = '';
+        bookingData.time = "";
+        
+        const times = CONFIG.workingHours[bookingData.period] || [];
+        
+        if (times.length === 0) {
+            grid.innerHTML = '<p style="grid-column: span 3; text-align: center; color: #999; font-size: 14px;">Nenhum horário disponível neste período.</p>';
+            return;
+        }
+
+        times.forEach(time => {
+            const btn = document.createElement('button');
+            btn.className = 'time-btn';
+            btn.textContent = time;
+            btn.onclick = () => {
+                document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                bookingData.time = time;
+            };
+            grid.appendChild(btn);
+        });
+    }
+
+    function validateStep2() {
+        if (!bookingData.date) { alert("Por favor, selecione uma data."); return; }
+        if (!bookingData.time) { alert("Por favor, selecione um horário."); return; }
+        
+        const today = new Date().toISOString().split('T')[0];
+        if (bookingData.date < today) { alert("Não é possível agendar em datas passadas."); return; }
+
+        goToStep(3);
+    }
+
+    /* ==========================================
+       TELA 3 E 4: FINALIZAÇÃO
+       ========================================== */
+    function finishBooking() {
+        bookingData.clientName = document.getElementById('input-name').value;
+        bookingData.clientWhatsapp = document.getElementById('input-whatsapp').value;
+        bookingData.clientAddress = document.getElementById('input-address').value;
+        bookingData.clientEmail = document.getElementById('input-email').value;
+        bookingData.clientNotes = document.getElementById('input-notes').value;
+
+        if (!bookingData.clientName || !bookingData.clientWhatsapp || !bookingData.clientAddress) {
+            alert("Por favor, preencha nome, WhatsApp e endereço.");
+            return;
+        }
+
+        const dateParts = bookingData.date.split('-');
+        const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+
+        document.getElementById('summary-box').innerHTML = `
+            <p><strong>Cliente:</strong> ${bookingData.clientName}</p>
+            <p><strong>Serviço:</strong> ${bookingData.service.name}</p>
+            <p><strong>Data:</strong> ${formattedDate}</p>
+            <p><strong>Horário:</strong> ${bookingData.time}</p>
+            <p><strong>Endereço:</strong> ${bookingData.clientAddress}</p>
+        `;
+
+        // 🔗 SALVA NO localStorage (formato que o Painel ADM lê)
+        saveToLocalStorage(bookingData);
+
+        goToStep(4);
+    }
+
+    // ================================================================
+    // 🔗 INTEGRAÇÃO COM O PAINEL ADM
+    // Salva o agendamento em 'tcbeauty_agendamentos' (chave que o ADM lê)
+    // ================================================================
+    function saveToLocalStorage(data) {
+        // Converte "R$ 150,00" → 150.00
+        const valorNumerico = parseFloat(
+            String(data.service.price).replace('R$', '').replace(/\./g, '').replace(',', '.').trim()
+        ) || 0;
+
+        const novoAgendamento = {
+            id: 'ag' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+            clienteNome: data.clientName,
+            clienteTelefone: data.clientWhatsapp,
+            clienteFoto: '',
+            servico: data.service.name,
+            profissional: 'Luíza',
+            data: data.date, // formato AAAA-MM-DD
+            hora: data.time, // "14:00"
+            valor: valorNumerico,
+            status: 'pendente', // o ADM vê como pendente
+            observacoes: (data.clientNotes || '') + (data.clientAddress ? ` | Endereço: ${data.clientAddress}` : ''),
+            endereco: data.clientAddress,
+            email: data.clientEmail || '',
+            criadoEm: new Date().toISOString()
+        };
+
+        // Lê a lista atual, adiciona o novo e grava de volta
+        let agendamentos = [];
+        try {
+            agendamentos = JSON.parse(localStorage.getItem('tcbeauty_agendamentos') || '[]');
+            if (!Array.isArray(agendamentos)) agendamentos = [];
+        } catch (e) {
+            agendamentos = [];
+        }
+        agendamentos.push(novoAgendamento);
+        localStorage.setItem('tcbeauty_agendamentos', JSON.stringify(agendamentos));
+
+        console.log('✅ Agendamento salvo para o Painel ADM:', novoAgendamento);
+    }
+
+    /* ==========================================
+       WHATSAPP
+       ========================================== */
+    function sendWhatsApp() {
+        const dateParts = bookingData.date.split('-');
+        const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+
+        const message = `Olá, TC Beauty! 💄✨
+
+Gostaria de confirmar meu agendamento.
+
+*Nome:* ${bookingData.clientName}
+*Serviço:* ${bookingData.service.name}
+*Data:* ${formattedDate}
+*Horário:* ${bookingData.time}
+*Endereço:* ${bookingData.clientAddress}
+*WhatsApp:* ${bookingData.clientWhatsapp}
+
+${bookingData.clientNotes ? `*Observações:* ${bookingData.clientNotes}\n` : ''}
+Aguardo a confirmação. Obrigada! 💗`;
+
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappURL = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodedMessage}`;
+        
+        window.open(whatsappURL, '_blank');
+    }
+
+    /* ==========================================
+       INICIALIZAÇÃO
+       ========================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+        renderServices();
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('input-date').min = today;
+    });
+</script>
+</body>
+</html>
